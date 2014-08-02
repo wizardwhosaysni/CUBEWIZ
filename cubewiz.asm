@@ -22,7 +22,8 @@ LAST_COMMAND equ 1FF1h
 DAC_LAST_OFFSET equ 1FF4h
 DAC_REMAINING_LENGTH equ 1FF6h
 NEW_SAMPLE_TO_LOAD equ 1FF8h	
-YM_TIMER_VALUE equ 1FF9h		
+YM_TIMER_VALUE equ 1FF9h
+SAVED_YM_TIMER_VALUE equ 1FFAh		
 FADE_IN_PARAMETERS equ 1FFCh	
 MUSIC_LEVEL equ 1FFDh
 NEW_OPERATION equ 1FFFh	
@@ -397,15 +398,18 @@ Load_Music:				; CODE XREF: Main+37j
 		ld	(MUSIC_LEVEL), a ; general output level	for music and SFX type 1, sent from 68k
 		xor	a
 		ld	(FADE_IN_TIMER), a ; reset fade	in timer
+		
+		call	Save_Music
+		
 		call	StopMusic	; stop currently playing music if there	was one
 		inc	hl
 		ld	a, (hl)		; get music data byte 1	: indicates if music uses DAC Samples
 		inc	hl		; so music byte	2 is useless ? I guess it was intended to use YM Timer A first,	which needs two	data bytes
 		inc	hl		; point	to byte	3 : YM Timer B value
 		ld	(MUSIC_DOESNT_USE_SAMPLES), a ;	indicates if music uses	DAC Samples
-		ld	b, 26h ; '&'    ; YM register : Timer B
-		ld	c, (hl)		; value	to input
-		call	YM1_Input	; set Timer B value
+		ld	a, (hl)
+		ld	(YM_TIMER_VALUE), a
+		call	YM_SetTimer
 		xor	a
 		ld	(CURRENTLY_FADING_OUT),	a ; clear fade out bytes
 		ld	(FADE_OUT_COUNTER), a ;	Counts how many	times the fade out timer reached 0. Fade out stops at value $0C.
@@ -496,6 +500,15 @@ Load_SFX:				; CODE XREF: Main+21j Main+53j
 		inc	hl
 		ld	h, (hl)		; get the proper pointer
 		ld	l, a
+		
+		; hl now points to original sfx offset, with sfx data starting at 0x162D
+		; now sfx data starts at 0xB070 so 0xB070 - 0x162D = 9A43h to add
+		push	bc
+		ld	b, 9Ah
+		ld	c, 43h
+		add	hl, bc
+		pop	bc
+		
 		ld	a, (hl)		; get pointed byte 0
 		ld	(01FF2h), a	; my debug commands
 		ld	a, SFX_BANK
@@ -516,6 +529,14 @@ Load_SFX_Channels:			; CODE XREF: Main+128j
 		inc	hl
 		ld	d, (hl)		; de = bytes 2-3 of sound data = pointer
 		inc	hl
+		
+		; add 9A43h to sfx data offset since it's been moved from driver to bank
+		push	hl		
+		ld	hl, 09A43h
+		adc	hl, de
+		ex	hl, de
+		pop	hl
+		
 		ld	a, (de)		; a = first byte of current channel
 		cp	0FFh		; if first byte	= FF, there is no data to setup, so skip subroutine call
 		jr	z, loc_2EA
@@ -538,6 +559,14 @@ loc_309:				; CODE XREF: Main+164j
 		inc	hl
 		ld	d, (hl)
 		inc	hl		; hl points to next pointer
+		
+		; add 9A43h to sfx data offset since it's been moved from driver to bank
+		push	hl		
+		ld	hl, 09A43h
+		adc	hl, de
+		ex	hl, de
+		pop	hl
+		
 		ld	a, (de)		; a = first byte of current channel
 		cp	0FFh
 		jr	z, loc_324	; if a = FF, ignore this channel
@@ -3375,20 +3404,28 @@ YM_SetTimer:				; CODE XREF: Main+1Cj
 
 ; =============== S U B	R O U T	I N E =======================================
 
+;TODO save music YM timer too
 
 Save_Music:	
 		push	ix
-		push	iy	
+		push	iy
+		push	bc			
 		push	de	
+		ld	a, (YM_TIMER_VALUE)
+		ld	(SAVED_YM_TIMER_VALUE), a
 		ld	ix, MUSIC_CHANNEL_YM1
 		ld	iy, SAVED_MUSIC_CHANNEL_YM1
-		ld	d, 0F0h		; 1E0h bytes to copy, two by two
+		ld	b, 0h
+		ld	c, 010h
+		ld	d, 0Ah		
 Save_Music_Loop:			
-		call	Copy_Byte
-		call	Copy_Byte		
+		call	Copy_Channel_Data	
+		add	ix, bc
+		add	iy, bc
 		dec	d
 		jr	nz, Save_Music_Loop
 		pop	de
+		pop	bc		
 		pop	iy
 		pop	ix
 		ret
@@ -3396,27 +3433,51 @@ Save_Music_Loop:
 
 ; =============== S U B	R O U T	I N E =======================================
 
+;TODO restore YM timer too
 
 Resume_Music:	
 		push	ix
 		push	iy	
+		push	bc		
 		push	de	
 		call	StopMusic
 		xor	a
+		ld	a, (SAVED_YM_TIMER_VALUE)
+		ld	(YM_TIMER_VALUE), a
+		call	YM_SetTimer
 		ld	(FADE_IN_TIMER), a ; reset fade	in timer		
 		ld	ix, SAVED_MUSIC_CHANNEL_YM1
 		ld	iy, MUSIC_CHANNEL_YM1
-		ld	d, 0F0h		; 1E0h bytes to copy, two by two
+		ld	b, 0h
+		ld	c, 010h		
+		ld	d, 0Ah
 Resume_Music_Loop:			
-		call	Copy_Byte
-		call	Copy_Byte		
+		call	Copy_Channel_Data	
+		add	ix, bc
+		add	iy, bc
 		dec	d
 		jr	nz, Resume_Music_Loop
 		pop	de
+		pop	bc		
 		pop	iy
 		pop	ix
 		ret
 ; End of function Resume_Music
+
+; =============== S U B	R O U T	I N E =======================================
+
+
+Copy_Channel_Data:				
+		push	de	
+		ld	d, 010h
+Copy_Channel_Data_Loop:
+		call	Copy_Byte
+		call	Copy_Byte		
+		dec	d
+		jr	nz, Copy_Channel_Data_Loop
+		pop	de
+		ret
+; End of function Copy_Byte
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4041,9 +4102,10 @@ t_SAMPLE_LOAD_DATA:
 		db  0Fh,   0,	DAC_BANK_1,   0,0A3h, 1Dh, 8Eh,0D6h
 		db  14h,   0,	DAC_BANK_1,   0,0A3h, 1Dh, 8Eh,0D6h
 		
-		align 1A00h
-			
+		align 800h
+		
 		db  "MUSICYM1"	
+		align	10h
 MUSIC_CHANNEL_YM1:
 		db 0			
 		db 0			
@@ -4078,15 +4140,8 @@ MUSIC_CHANNEL_YM1_NOT_IN_USE:
 		db  0
 MUSIC_CHANNEL_YM1_STEREO: db  0
 		db  0	
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  "MUSICYM2"			
+		db  "MUSICYM2"
+		align	10h			
 MUSIC_CHANNEL_YM2:
 		db 0			
 		db 0			
@@ -4121,15 +4176,8 @@ MUSIC_CHANNEL_YM2_NOT_IN_USE:
 		db  0
 MUSIC_CHANNEL_YM2_STEREO: db  0
 		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  "MUSICYM3"			
+		db  "MUSICYM3"		
+		align	10h			
 MUSIC_CHANNEL_YM3:
 		db 0			
 		db 0			
@@ -4164,15 +4212,8 @@ MUSIC_CHANNEL_YM3_NOT_IN_USE:
 		db  0
 MUSIC_CHANNEL_YM3_STEREO: db  0
 		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  "MUSICYM4"		
+		db  "MUSICYM4"	
+		align	10h	
 MUSIC_CHANNEL_YM4:
 		db 0			
 		db 0			
@@ -4207,15 +4248,8 @@ MUSIC_CHANNEL_YM4_NOT_IN_USE:
 		db  0
 MUSIC_CHANNEL_YM4_STEREO:		db  0
 		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  "MUSICYM5"			
+		db  "MUSICYM5"		
+		align	10h	
 MUSIC_CHANNEL_YM5:
 		db 0			
 		db 0			
@@ -4250,15 +4284,8 @@ MUSIC_CHANNEL_YM5_NOT_IN_USE:
 		db  0
 MUSIC_CHANNEL_YM5_STEREO:		db  0
 		db  0	
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  "MUSICYM6"			
+		db  "MUSICYM6"
+		align	10h			
 MUSIC_CHANNEL_YM6:
 		db 0			
 		db 0			
@@ -4291,18 +4318,10 @@ MUSIC_CHANNEL_YM6_NOT_IN_USE:
 		db  0
 		db  0
 		db  0
-MUSIC_CHANNEL_YM6_STEREO:		
+MUSIC_CHANNEL_YM6_STEREO:		db  0
 		db  0
-		db  0	
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  "MUSICTN1"				
+		db  "MUSICTN1"	
+		align	10h			
 MUSIC_CHANNEL_PSG1:
 		db 0			
 		db 0			
@@ -4337,15 +4356,8 @@ MUSIC_CHANNEL_PSG1_NOT_IN_USE:
 		db  0
 		db  0
 		db  0	
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  "MUSICTN2"				
+		db  "MUSICTN2"
+		align	10h				
 MUSIC_CHANNEL_PSG2:
 		db 0			
 		db 0			
@@ -4380,15 +4392,8 @@ MUSIC_CHANNEL_PSG2_NOT_IN_USE:
 		db  0
 		db  0
 		db  0	
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  "MUSICTN3"					
+		db  "MUSICTN3"	
+		align	10h				
 MUSIC_CHANNEL_PSG3:
 		db 0			
 		db 0			
@@ -4423,15 +4428,8 @@ MUSIC_CHANNEL_PSG3_NOT_IN_USE:
 		db  0
 		db  0
 		db  0	
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
 		db  "MUSICNOI"			
+		align	10h
 MUSIC_CHANNEL_NOISE:
 		db 0			
 		db 0			
@@ -4462,21 +4460,9 @@ MUSIC_CHANNEL_NOISE_NOT_IN_USE:
 		db  0
 		db  0
 		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0		
-		db  "SFXYM1"				
+		align	10h
+		db  "SFXYM1"		
+		align	10h		
 SFX_CHANNEL_YM1:
 		db 0			
 		db 0			
@@ -4505,23 +4491,9 @@ SFX_CHANNEL_YM1_NOT_IN_USE:
 		db  0
 		db  0
 		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0	
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0				
-		db  "SFXYM2"					
+		align	10h		
+		db  "SFXYM2"
+		align	10h					
 SFX_CHANNEL_YM2:
 		db 0			
 		db 0			
@@ -4553,20 +4525,9 @@ SFX_CHANNEL_YM2_NOT_IN_USE:
 		db  0
 		db  0
 		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  "SFXYM3"			
+		align	10h
+		db  "SFXYM3"		
+		align	10h	
 SFX_CHANNEL_YM3:
 		db 0			
 		db 0			
@@ -4598,20 +4559,9 @@ SFX_CHANNEL_YM3_NOT_IN_USE:
 		db  0
 		db  0
 		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  "SFXYM4"			
+		align	10h
+		db  "SFXYM4"		
+		align	10h	
 SFX_CHANNEL_YM4:
 		db 0			
 		db 0			
@@ -4646,17 +4596,8 @@ SFX_CHANNEL_YM4_NOT_IN_USE:
 		db  0
 SFX_CHANNEL_YM4_STEREO:		db  0
 		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  "SFXYM5"			
+		db  "SFXYM5"	
+		align	10h		
 SFX_CHANNEL_YM5:
 		db 0			
 		db 0			
@@ -4691,17 +4632,8 @@ SFX_CHANNEL_YM5_NOT_IN_USE:
 		db  0
 SFX_CHANNEL_YM5_STEREO:		db  0
 		db  0	
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
 		db  "SFXYM6"		
+		align	10h
 SFX_CHANNEL_YM6:
 		db 0			
 		db 0			
@@ -4736,15 +4668,8 @@ SFX_CHANNEL_YM6_NOT_IN_USE:
 		db  0
 SFX_CHANNEL_YM6_STEREO:		db  0
 		db  0	
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  "SFXTONE1"			
+		db  "SFXTONE1"	
+		align	10h		
 SFX_CHANNEL_PSG1:
 		db 0			
 		db 0			
@@ -4769,25 +4694,9 @@ SFX_CHANNEL_PSG1_NOT_IN_USE:
 		db  0
 		db  0
 		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0	
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  "SFXTONE2"			
+		align	10h
+		db  "SFXTONE2"	
+		align	10h		
 SFX_CHANNEL_PSG2:
 		db 0			
 		db 0			
@@ -4815,22 +4724,9 @@ SFX_CHANNEL_PSG2_NOT_IN_USE:
 		db  0
 		db  0
 		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0	
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  "SFXTONE3"				
+		align	10h
+		db  "SFXTONE3"	
+		align	10h			
 SFX_CHANNEL_PSG3:
 		db 0			
 		db 0			
@@ -4863,17 +4759,9 @@ SFX_CHANNEL_PSG3_NOT_IN_USE:
 		db  0
 		db  0
 		db  0
-		db  0
-		db  0	
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  "SFXNOISE"			
+		align	10h
+		db  "SFXNOISE"	
+		align	10h		
 SFX_CHANNEL_NOISE:
 		db 0			
 		db 0			
@@ -4904,19 +4792,9 @@ SFX_CHANNEL_NOISE_NOT_IN_USE:
 		db  0
 		db  0
 		db  0
-		db  0
-		db  0
-		db  0
-		db  0	
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  "SAVEDYM1"			
+		align	10h
+		db  "SAVEDYM1"		
+		align	10h	
 SAVED_MUSIC_CHANNEL_YM1:
 		db 0			
 		db 0			
@@ -4937,21 +4815,9 @@ SAVED_MUSIC_CHANNEL_YM1_NOT_IN_USE:
 		db  0
 		db  0
 		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0	
-		db  "SAVEDYM2"						
+		align	10h
+		db  "SAVEDYM2"		
+		align	10h				
 SAVED_MUSIC_CHANNEL_YM2:
 		db 0			
 		db 0			
@@ -4981,20 +4847,9 @@ SAVED_MUSIC_CHANNEL_YM2_NOT_IN_USE:
 		db  0
 		db  0
 		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  "SAVEDYM3"			
+		align	10h
+		db  "SAVEDYM3"	
+		align	10h		
 SAVED_MUSIC_CHANNEL_YM3:
 		db 0			
 		db 0			
@@ -5025,19 +4880,9 @@ SAVED_MUSIC_CHANNEL_YM3_NOT_IN_USE:
 		db  0
 		db  0
 		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  "SAVEDYM4"			
+		align	10h
+		db  "SAVEDYM4"
+		align	10h			
 SAVED_MUSIC_CHANNEL_YM4:
 		db 0			
 		db 0			
@@ -5065,22 +4910,9 @@ SAVED_MUSIC_CHANNEL_YM4_NOT_IN_USE:
 		db  0
 		db  0
 		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  "SAVEDYM5"			
+		align	10h
+		db  "SAVEDYM5"		
+		align	10h	
 SAVED_MUSIC_CHANNEL_YM5:
 		db 0			
 		db 0			
@@ -5108,22 +4940,9 @@ SAVED_MUSIC_CHANNEL_YM5_NOT_IN_USE:
 		db  0
 		db  0
 		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0	
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  "SAVEDYM6"		
+		align	10h
+		db  "SAVEDYM6"	
+		align	10h	
 SAVED_MUSIC_CHANNEL_YM6:
 		db 0			
 		db 0			
@@ -5152,21 +4971,9 @@ SAVED_MUSIC_CHANNEL_YM6_NOT_IN_USE:
 		db  0
 		db  0
 		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0	
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  "SAVEDTN1"				
+		align	10h
+		db  "SAVEDTN1"	
+		align	10h			
 SAVED_MUSIC_CHANNEL_PSG1:
 		db 0			
 		db 0			
@@ -5196,19 +5003,7 @@ SAVED_MUSIC_CHANNEL_PSG1_NOT_IN_USE:
 		db  0
 		db  0
 		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0	
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
+		align	10h
 		db  "SAVEDTN2"				
 SAVED_MUSIC_CHANNEL_PSG2:
 		db 0			
@@ -5240,19 +5035,9 @@ SAVED_MUSIC_CHANNEL_PSG2_NOT_IN_USE:
 		db  0
 		db  0
 		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  "SAVEDTN3"						
+		align	10h
+		db  "SAVEDTN3"	
+		align	10h					
 SAVED_MUSIC_CHANNEL_PSG3:
 		db 0			
 		db 0			
@@ -5282,20 +5067,9 @@ SAVED_MUSIC_CHANNEL_PSG3_NOT_IN_USE:
 		db  0
 		db  0
 		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  "SAVEDNOI"					
+		align	10h
+		db  "SAVEDNOI"	
+		align	10h				
 SAVED_MUSIC_CHANNEL_NOISE:
 		db 0			
 		db 0			
