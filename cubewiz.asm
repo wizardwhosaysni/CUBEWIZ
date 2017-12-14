@@ -1569,7 +1569,7 @@ loc_7E6:				; CODE XREF: YM2_ParseData+A8j
 		ld	bc, 0FE20h	; if an	SFX was	being managed, go back to corresponding	music channel
 		add	ix, bc
 		ld	a, 0B4h	; '´'   ; YM Register : Stereo / LFO Sensitivity
-		ld	(01FF6h), ix
+		;ld	(01FF6h), ix
 		add	a, (iy+0)
 		ld	b, a
 		ld	c, (ix+1Eh)	; load corresponding music channel stereo setting
