@@ -23,7 +23,8 @@ DAC_LAST_OFFSET equ 1FF4h
 DAC_REMAINING_LENGTH equ 1FF6h
 NEW_SAMPLE_TO_LOAD equ 1FF8h	
 YM_TIMER_VALUE equ 1FF9h
-SAVED_YM_TIMER_VALUE equ 1FFAh		
+SAVED_YM_TIMER_VALUE equ 1FFAh
+SAVED_MUSIC_BANK equ 1FFBh		
 FADE_IN_PARAMETERS equ 1FFCh	
 MUSIC_LEVEL equ 1FFDh
 NEW_OPERATION equ 1FFFh	
@@ -359,8 +360,13 @@ Main:
 		jp	z, YM_SetTimer	; if a = F1h
 		cp	41h ; 'A'
 		jp	nc, Load_SFX	; if a > 41h, then play	an SFX (already	stored in ram along with the code)
+		
 		push	hl		; else,	play a music !
 		push	de
+		push	af
+		ld	a, (MUSIC_BANK)
+		ld	(SAVED_MUSIC_BANK), a	
+		pop	af
 		push	af
 		cp	21h ; '!'
 		jr	nc, loc_201	; if a > 21h, then play	music from chunk 0x1F0000
@@ -3404,7 +3410,7 @@ YM_SetTimer:				; CODE XREF: Main+1Cj
 
 ; =============== S U B	R O U T	I N E =======================================
 
-;TODO save music YM timer too
+;TODO save YM6 DAC STATE, dammit !
 
 Save_Music:	
 		push	ix
@@ -3413,6 +3419,8 @@ Save_Music:
 		push	de	
 		ld	a, (YM_TIMER_VALUE)
 		ld	(SAVED_YM_TIMER_VALUE), a
+		ld	a, (MUSIC_DOESNT_USE_SAMPLES)
+		ld	(SAVED_MUSIC_DOESNT_USE_SAMPLES), a
 		ld	ix, MUSIC_CHANNEL_YM1
 		ld	iy, SAVED_MUSIC_CHANNEL_YM1
 		ld	b, 0h
@@ -3433,7 +3441,7 @@ Save_Music_Loop:
 
 ; =============== S U B	R O U T	I N E =======================================
 
-;TODO restore YM timer too
+;TODO restore music bank !
 
 Resume_Music:	
 		push	ix
@@ -3442,8 +3450,13 @@ Resume_Music:
 		push	de	
 		call	StopMusic
 		xor	a
+		ld	a, (SAVED_MUSIC_BANK)
+		ld	(MUSIC_BANK), a
+		call	LoadAnyBank
 		ld	a, (SAVED_YM_TIMER_VALUE)
 		ld	(YM_TIMER_VALUE), a
+		ld	a, (SAVED_MUSIC_DOESNT_USE_SAMPLES)
+		ld	(MUSIC_DOESNT_USE_SAMPLES), a
 		call	YM_SetTimer
 		ld	(FADE_IN_TIMER), a ; reset fade	in timer		
 		ld	ix, SAVED_MUSIC_CHANNEL_YM1
@@ -4080,6 +4093,7 @@ FADE_IN_TIMER:	db 0			; DATA XREF: Main+5Fw UpdateSound+18o
 MUSIC_DOESNT_USE_SAMPLES:db 0		; DATA XREF: Main+6Cw UpdateSound+6r
 					; YM2_ParseChannel6Data:loc_B68r
 					; YM2_ParseChannel6Data+5Er
+SAVED_MUSIC_DOESNT_USE_SAMPLES:db 0					
 					
 		align 010h					
 					
