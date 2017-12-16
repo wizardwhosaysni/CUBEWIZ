@@ -3410,7 +3410,7 @@ YM_SetTimer:				; CODE XREF: Main+1Cj
 
 ; =============== S U B	R O U T	I N E =======================================
 
-;TODO save YM6 DAC STATE, dammit !
+;
 
 Save_Music:	
 		push	ix
@@ -3441,7 +3441,7 @@ Save_Music_Loop:
 
 ; =============== S U B	R O U T	I N E =======================================
 
-;TODO restore music bank !
+;
 
 Resume_Music:	
 		push	ix
@@ -3453,12 +3453,16 @@ Resume_Music:
 		ld	a, (SAVED_MUSIC_BANK)
 		ld	(MUSIC_BANK), a
 		call	LoadAnyBank
-		ld	a, (SAVED_YM_TIMER_VALUE)
-		ld	(YM_TIMER_VALUE), a
 		ld	a, (SAVED_MUSIC_DOESNT_USE_SAMPLES)
 		ld	(MUSIC_DOESNT_USE_SAMPLES), a
+		ld	a, (SAVED_YM_TIMER_VALUE)
+		ld	(YM_TIMER_VALUE), a
 		call	YM_SetTimer
-		ld	(FADE_IN_TIMER), a ; reset fade	in timer		
+		ld	a, (FADE_IN_PARAMETERS)	; fade in parameter applied from 68k when a music is loaded. nibble 1 :	fade in	speed. nibble 2	: fade in start	level.
+		and	0Fh
+		ld	(MUSIC_LEVEL), a ; general output level	for music and SFX type 1, sent from 68k
+		xor	a
+		ld	(FADE_IN_TIMER), a ; reset fade	in timer	
 		ld	ix, SAVED_MUSIC_CHANNEL_YM1
 		ld	iy, MUSIC_CHANNEL_YM1
 		ld	b, 0h
