@@ -15,10 +15,11 @@ YM_INSTRUMENTS_BANK_OFFSET equ 0B000h
 
 ;offsets
 pt_SFX equ 1500h
-STACK_START equ 1FF0h	
+STACK_START equ 1FE0h	
 COMMANDS_COUNTER equ 1FF0h
 LAST_COMMAND equ 1FF1h	
-;INITS_COUNTER equ 1FF3h
+CURRENT_MUSIC equ 1FF2h
+PREVIOUS_MUSIC equ 1FF3h
 DAC_LAST_OFFSET equ 1FF4h
 DAC_REMAINING_LENGTH equ 1FF6h
 NEW_SAMPLE_TO_LOAD equ 1FF8h	
@@ -361,6 +362,27 @@ Main:
 		cp	41h ; 'A'
 		jp	nc, Load_SFX	; if a > 41h, then play	an SFX (already	stored in ram along with the code)
 		
+		ld	ix, PREVIOUS_MUSIC
+		cp	(ix)
+		jp	z, Resume_Previous_Music
+		jp	Not_Previous_Music
+		
+Resume_Previous_Music:
+		; if saved music was finished, just load it again
+		push	af
+		ld	a, (SAVED_MUSIC_CHANNEL_YM1_NOT_IN_USE)		
+		cp	01h
+		jp	nz, Resume_Indeed
+		pop	af
+		jp	Not_Previous_Music
+Resume_Indeed:		
+		ld	a, (CURRENT_MUSIC)
+		ld	(PREVIOUS_MUSIC), a	
+		pop	af
+		ld	(CURRENT_MUSIC), a
+		jp	Resume_Music		
+
+Not_Previous_Music:		
 		push	hl		; else,	play a music !
 		push	de
 		push	af
@@ -373,7 +395,10 @@ Main:
 		ld	a, MUSIC_BANK_1		; otherwise play music from 0x1F8000
 		ld	(MUSIC_BANK), a	; load 01h to 0x152D
 		call	LoadAnyBank	; load rom chunk 0x1F8000 to bank
+		ld	a, (CURRENT_MUSIC)	
+		ld	(PREVIOUS_MUSIC), a
 		pop	af
+		ld	(CURRENT_MUSIC), a
 		ld	de, 8000h
 		jp	Load_Music	; decrement music/sound	index (no $00 entry)
 ; ---------------------------------------------------------------------------
@@ -382,7 +407,10 @@ loc_201:				; CODE XREF: Main+29j
 		ld	a, MUSIC_BANK_2	
 		ld	(MUSIC_BANK), a
 		call	LoadAnyBank	; load rom chunk 0x1F0000 to bank
+		ld	a, (CURRENT_MUSIC)	
+		ld	(PREVIOUS_MUSIC), a
 		pop	af
+		ld	(CURRENT_MUSIC), a
 		ld	de, 8000h
 		sub	20h ; ' '
 
@@ -515,15 +543,15 @@ Load_SFX:				; CODE XREF: Main+21j Main+53j
 		add	hl, bc
 		pop	bc
 		
-		ld	a, (hl)		; get pointed byte 0
-		ld	(01FF2h), a	; my debug commands
-		ld	a, SFX_BANK
-		ld	(01FF3h), a
+		;ld	a, (hl)		; get pointed byte 0
+		;ld	(01FF2h), a	; my debug commands
+		;ld	a, SFX_BANK
+		;ld	(01FF3h), a
 		ld	a, h
 		ld	(01FF4h), a
 		ld	a, l	
 		ld	(01FF5h), a						
-		ld	a, (01FF2h)		
+		ld	a, (hl)		
 		inc	hl		; hl points to byte 1 of sfx data
 		cp	1
 		jr	nz, Load_SFX_Type_2 ; if a != 1	(then a	= 2, which means the sound just	concerns 3 channels)
@@ -754,6 +782,11 @@ loc_42B:				; CODE XREF: UpdateSound+Aj
 		cp	0Fh
 		jr	z, loc_44C
 		inc	(hl)		; if music level not 0F, increment it and update YM instruments	levels
+		ld	a, (hl)
+		cp	0Fh
+		jr	z, update_level
+		inc	(hl)
+update_level:		
 		call	YM_UpdateInstrumentsLevels
 
 loc_44C:				; CODE XREF: UpdateSound+23j
@@ -3431,7 +3464,7 @@ Save_Music_Loop:
 		add	ix, bc
 		add	iy, bc
 		dec	d
-		jr	nz, Save_Music_Loop
+		jr	nz, Save_Music_Loop	
 		pop	de
 		pop	bc		
 		pop	iy
@@ -3443,12 +3476,37 @@ Save_Music_Loop:
 
 ;
 
-Resume_Music:	
+Resume_Music:		
+		
 		push	ix
 		push	iy	
 		push	bc		
-		push	de	
-		call	StopMusic
+		push	de
+		
+		; save in temporary space
+
+		ld	a, (MUSIC_BANK)
+		ld	(TMPCPY_MUSIC_BANK), a
+		ld	a, (YM_TIMER_VALUE)
+		ld	(TMPCPY_YM_TIMER_VALUE), a
+		ld	a, (MUSIC_DOESNT_USE_SAMPLES)
+		ld	(TMPCPY_MUSIC_DOESNT_USE_SAMPLES), a
+		ld	ix, MUSIC_CHANNEL_YM1
+		ld	iy, TMPCPY_MUSIC_CHANNEL_YM1
+		ld	b, 0h
+		ld	c, 010h
+		ld	d, 0Ah		
+Tmpcpy_Music_Loop:			
+		call	Copy_Channel_Data	
+		add	ix, bc
+		add	iy, bc
+		dec	d
+		jr	nz, Tmpcpy_Music_Loop
+		
+		call	StopMusic				
+		
+		; resume
+		
 		xor	a
 		ld	a, (SAVED_MUSIC_BANK)
 		ld	(MUSIC_BANK), a
@@ -3458,7 +3516,9 @@ Resume_Music:
 		ld	a, (SAVED_YM_TIMER_VALUE)
 		ld	(YM_TIMER_VALUE), a
 		call	YM_SetTimer
-		ld	a, (FADE_IN_PARAMETERS)	; fade in parameter applied from 68k when a music is loaded. nibble 1 :	fade in	speed. nibble 2	: fade in start	level.
+		ld	a, 010h
+		ld	(FADE_IN_PARAMETERS), a
+		;ld	a, (FADE_IN_PARAMETERS)	; fade in parameter applied from 68k when a music is loaded. nibble 1 :	fade in	speed. nibble 2	: fade in start	level.
 		and	0Fh
 		ld	(MUSIC_LEVEL), a ; general output level	for music and SFX type 1, sent from 68k
 		xor	a
@@ -3474,6 +3534,28 @@ Resume_Music_Loop:
 		add	iy, bc
 		dec	d
 		jr	nz, Resume_Music_Loop
+		
+		
+		; Copy temporary space into saved space
+
+		ld	a, (TMPCPY_MUSIC_BANK)
+		ld	(SAVED_MUSIC_BANK), a
+		ld	a, (TMPCPY_YM_TIMER_VALUE)
+		ld	(SAVED_YM_TIMER_VALUE), a
+		ld	a, (TMPCPY_MUSIC_DOESNT_USE_SAMPLES)
+		ld	(SAVED_MUSIC_DOESNT_USE_SAMPLES), a
+		ld	ix, TMPCPY_MUSIC_CHANNEL_YM1
+		ld	iy, SAVED_MUSIC_CHANNEL_YM1
+		ld	b, 0h
+		ld	c, 010h
+		ld	d, 0Ah		
+Tmpcpy_save_Music_Loop:			
+		call	Copy_Channel_Data	
+		add	ix, bc
+		add	iy, bc
+		dec	d
+		jr	nz, Tmpcpy_save_Music_Loop
+			
 		pop	de
 		pop	bc		
 		pop	iy
@@ -4120,7 +4202,7 @@ t_SAMPLE_LOAD_DATA:
 		db  0Fh,   0,	DAC_BANK_1,   0,0A3h, 1Dh, 8Eh,0D6h
 		db  14h,   0,	DAC_BANK_1,   0,0A3h, 1Dh, 8Eh,0D6h
 		
-		align 800h
+		align 1700h
 		
 		db  "MUSICYM1"	
 		align	10h
@@ -5117,11 +5199,49 @@ SAVED_MUSIC_CHANNEL_NOISE_NOT_IN_USE:
 		db  0
 		db  0
 		db  0
+		
+		
+		align	10h
+		db  "TMPCPYM1"
+		align	10h	
+TMPCPY_MUSIC_CHANNEL_YM1:
+		db 0			
+		db 0			
+		db 0			
+TMPCPY_MUSIC_CHANNEL_YM1_NOT_IN_USE:
+		db 1		
+		db 0Eh
+		db  0
+		db  1
+		db 18h
+		db  0
+		db  0
+		db  0
+		db 6Bh
+		db 12h
 		db  0
 		db  0
 		db  0
 		db  0
-		db  0	
+		db  0
+		align	10h
+		db  "TMPCPYM2"		
+		align	10h				
+TMPCPY_MUSIC_CHANNEL_YM2:
+		db 0			
+		db 0			
+		db 0			
+TMPCPY_MUSIC_CHANNEL_YM2_NOT_IN_USE:
+		db 1		
+		db 0Eh
+		db  0
+		db  1
+		db 18h
+		db  0
+		db  0
+		db  0
+		db 6Bh
+		db 12h
 		db  0
 		db  0
 		db  0
@@ -5129,7 +5249,274 @@ SAVED_MUSIC_CHANNEL_NOISE_NOT_IN_USE:
 		db  0
 		db  0
 		db  0
-		db  0								
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		align	10h
+		db  "TMPCPYM3"	
+		align	10h		
+TMPCPY_MUSIC_CHANNEL_YM3:
+		db 0			
+		db 0			
+		db 0			
+TMPCPY_MUSIC_CHANNEL_YM3_NOT_IN_USE:
+		db 1		
+		db 0Eh
+		db  0
+		db  1
+		db 18h
+		db  0
+		db  0
+		db  0
+		db 6Bh
+		db 12h
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		align	10h
+		db  "TMPCPYM4"
+		align	10h			
+TMPCPY_MUSIC_CHANNEL_YM4:
+		db 0			
+		db 0			
+		db 0			
+TMPCPY_MUSIC_CHANNEL_YM4_NOT_IN_USE:
+		db 1		
+		db 0Eh
+		db  0
+		db  1
+		db 18h
+		db  0
+		db  0
+		db  0
+		db 6Bh
+		db 12h
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		align	10h
+		db  "TMPCPYM5"		
+		align	10h	
+TMPCPY_MUSIC_CHANNEL_YM5:
+		db 0			
+		db 0			
+		db 0			
+TMPCPY_MUSIC_CHANNEL_YM5_NOT_IN_USE:
+		db 1		
+		db 0Eh
+		db  0
+		db  1
+		db 18h
+		db  0
+		db  0
+		db  0
+		db 6Bh
+		db 12h
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		align	10h
+		db  "TMPCPYM6"	
+		align	10h	
+TMPCPY_MUSIC_CHANNEL_YM6:
+		db 0			
+		db 0			
+		db 0			
+TMPCPY_MUSIC_CHANNEL_YM6_NOT_IN_USE:
+		db 1		
+		db 0Eh
+		db  0
+		db  1
+		db 18h
+		db  0
+		db  0
+		db  0
+		db 6Bh
+		db 12h
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		align	10h
+		db  "TMPCPTN1"	
+		align	10h			
+TMPCPY_MUSIC_CHANNEL_PSG1:
+		db 0			
+		db 0			
+		db 0			
+TMPCPY_MUSIC_CHANNEL_PSG1_NOT_IN_USE:
+		db 1		
+		db 0Eh
+		db  0
+		db  1
+		db 18h
+		db  0
+		db  0
+		db  0
+		db 6Bh
+		db 12h
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		align	10h
+		db  "TMPCPTN2"				
+TMPCPY_MUSIC_CHANNEL_PSG2:
+		db 0			
+		db 0			
+		db 0			
+TMPCPY_MUSIC_CHANNEL_PSG2_NOT_IN_USE:
+		db 1		
+		db 0Eh
+		db  0
+		db  1
+		db 18h
+		db  0
+		db  0
+		db  0
+		db 6Bh
+		db 12h
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		align	10h
+		db  "TMPCPTN3"	
+		align	10h					
+TMPCPY_MUSIC_CHANNEL_PSG3:
+		db 0			
+		db 0			
+		db 0			
+TMPCPY_MUSIC_CHANNEL_PSG3_NOT_IN_USE:
+		db 1		
+		db 0Eh
+		db  0
+		db  1
+		db 18h
+		db  0
+		db  0
+		db  0
+		db 6Bh
+		db 12h
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		align	10h
+		db  "TMPCPNOI"	
+		align	10h				
+TMPCPY_MUSIC_CHANNEL_NOISE:
+		db 0			
+		db 0			
+		db 0			
+TMPCPY_MUSIC_CHANNEL_NOISE_NOT_IN_USE:
+		db 1		
+		db 0Eh
+		db  0
+		db  1
+		db 18h
+		db  0
+		db  0
+		db  0
+		db 6Bh
+		db 12h
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		db  0
+		align	10h		
+TMPCPY_MUSIC_BANK:
+		db  0		
+TMPCPY_MUSIC_DOESNT_USE_SAMPLES:
+		db  0		
+TMPCPY_YM_TIMER_VALUE:
+		db  0
+		
+									
 END_OF_DRIVER:
 	if MOMPASS==2
 		if $ > 1FC0h
