@@ -14,21 +14,39 @@ YM_INSTRUMENTS_BANK equ 03Dh
 YM_INSTRUMENTS_BANK_OFFSET equ 0B000h		
 
 ;offsets
-pt_SFX equ 1500h
-STACK_START equ 1FE0h	
-COMMANDS_COUNTER equ 1FF0h
-LAST_COMMAND equ 1FF1h	
-CURRENT_MUSIC equ 1FF2h
-PREVIOUS_MUSIC equ 1FF3h
-DAC_LAST_OFFSET equ 1FF4h
-DAC_REMAINING_LENGTH equ 1FF6h
-NEW_SAMPLE_TO_LOAD equ 1FF8h	
-YM_TIMER_VALUE equ 1FF9h
-SAVED_YM_TIMER_VALUE equ 1FFAh
-SAVED_MUSIC_BANK equ 1FFBh		
-FADE_IN_PARAMETERS equ 1FFCh	
-MUSIC_LEVEL equ 1FFDh
-NEW_OPERATION equ 1FFFh	
+STACK_START equ 1FE0h
+
+SAVED_MUSIC_BANK 	equ 1FE0h
+MUSIC_BANK 		equ 1FF0h	
+PREVIOUS_MUSIC 		equ 1FE1h
+CURRENT_MUSIC 		equ 1FF1h
+SAVED_YM_TIMER_VALUE 	equ 1FE2h
+YM_TIMER_VALUE 		equ 1FF2h
+SAVED_MUSIC_DOESNT_USE_SAMPLES equ 1FE3h
+MUSIC_DOESNT_USE_SAMPLES equ 1FF3h
+	
+NEW_SAMPLE_TO_LOAD 	equ 1FE4h
+DAC_BANK		equ 1FF4h
+DAC_LAST_OFFSET 	equ 1FE5h
+DAC_REMAINING_LENGTH 	equ 1FF5h
+		
+
+
+FADE_OUT_LENGTH		equ 1FEBh
+FADE_OUT_TIMER		equ 1FECh
+FADE_OUT_COUNTER	equ 1FEDh
+CURRENTLY_FADING_OUT	equ 1FEEh
+
+FADE_IN_TIMER		equ 1FFBh
+FADE_IN_PARAMETERS 	equ 1FFCh	
+MUSIC_LEVEL 		equ 1FFDh
+
+LAST_COMMAND 		equ 1FFEh	
+COMMANDS_COUNTER 	equ 1FEFh
+NEW_OPERATION 		equ 1FFFh
+					
+
+;registers
 YM1_REGISTER equ 4000h
 YM1_DATA equ 4001h
 YM2_REGISTER equ 4002h
@@ -543,14 +561,10 @@ Load_SFX:				; CODE XREF: Main+21j Main+53j
 		add	hl, bc
 		pop	bc
 		
-		;ld	a, (hl)		; get pointed byte 0
-		;ld	(01FF2h), a	; my debug commands
-		;ld	a, SFX_BANK
-		;ld	(01FF3h), a
 		ld	a, h
-		ld	(01FF4h), a
+		ld	(DAC_LAST_OFFSET), a
 		ld	a, l	
-		ld	(01FF5h), a						
+		ld	(DAC_LAST_OFFSET+1), a						
 		ld	a, (hl)		
 		inc	hl		; hl points to byte 1 of sfx data
 		cp	1
@@ -706,7 +720,14 @@ loc_3CC:				; CODE XREF: StopMusic+5Fj
 		ld	ix, MUSIC_CHANNEL_YM6
 		call	YM2_LoadInstrument
 		ld	bc, 2806h	; YM register :	Key on/off
-		call	YM1_ConditionnalInput		
+		call	YM1_ConditionnalInput
+		jr	loc_3E3
+		
+StopMusic_DAC:				
+		xor	a
+		ld	(DAC_REMAINING_LENGTH), a
+		inc	a
+		ld	(DAC_REMAINING_LENGTH+1), a	
 
 loc_3E3:				; CODE XREF: StopMusic+76j
 
@@ -721,7 +742,7 @@ loc_3E3:				; CODE XREF: StopMusic+76j
 		ld	(hl), a		; set PSG channel 3 volume to 0
 		ld	a, 0FFh
 		ld	(hl), a		; set PSG noise	channel	volume to 0
-		ld	hl, MUSIC_CHANNEL_YM1 ; also pointed once	from 68k, to know if music/sfx is currently being played, I guess
+		ld	hl, MUSIC_CHANNEL_YM1_NOT_IN_USE ; also pointed once	from 68k, to know if music/sfx is currently being played, I guess
 		ld	de, 30h	; ' '   ; value to add to pointer to go to next channel in ram
 		ld	b, 0Ah		; loop ten times
 		ld	a, 1
@@ -1608,7 +1629,7 @@ loc_7E6:				; CODE XREF: YM2_ParseData+A8j
 		ld	bc, 0FE20h	; if an	SFX was	being managed, go back to corresponding	music channel
 		add	ix, bc
 		ld	a, 0B4h	; '´'   ; YM Register : Stereo / LFO Sensitivity
-		;ld	(01FF6h), ix
+		;ld	(DAC_REMAINING_LENGTH), ix
 		add	a, (iy+0)
 		ld	b, a
 		ld	c, (ix+1Eh)	; load corresponding music channel stereo setting
@@ -3555,7 +3576,17 @@ Tmpcpy_save_Music_Loop:
 		add	iy, bc
 		dec	d
 		jr	nz, Tmpcpy_save_Music_Loop
-			
+		
+		; avoid resumed PCM sample while fading in
+		ld	a, 0FEh	; 'þ'
+		ld	(NEW_SAMPLE_TO_LOAD), a
+		call	DAC_SetNewSample ; play	nothing	!
+		xor	a
+		ld	(DAC_REMAINING_LENGTH), a
+		ld	(DAC_REMAINING_LENGTH+1), a
+		ld	(DAC_LAST_OFFSET), a
+		ld	(DAC_LAST_OFFSET+1), a
+				
 		pop	de
 		pop	bc		
 		pop	iy
@@ -4110,9 +4141,6 @@ CURRENT_PSG_CHANNEL:db 0		; DATA XREF: PSG_ParseToneData-6FDr
 CURRENT_CHANNEL:db 0			; DATA XREF: YM_UpdateInstrumentsLevelso
 					; StopMusic+1o	UpdateSound+62o
 					; indicates the	channel	to process, from a relative point of view : YM1, YM2, PSG or SFX channels
-CURRENTLY_FADING_OUT:db	0		; DATA XREF: Main+76w StopMusic+A8w
-					; UpdateSound+39r
-					; PSG_LoadInstrument+Dr Fade_Out+7w
 					; set to 01 when a fade	out operation is being executed
 CURRENTLY_MANAGING_SFX:		db 0
 CALL_YM2_INSTEAD_OF_YM1:db 0		; DATA XREF: Pause_Sound+6w
@@ -4135,30 +4163,7 @@ CURRENTLY_MANAGING_SFX_TYPE_2:db 0	; DATA XREF: Pause_Sound+3w
 					; YM2_ParseChannel6Data+4r
 					; YM2_ParseChannel6Data+64r
 					; indicates if an SFX type 2 is	being processed, because these ones use	extra channel ram areas, to keep current music data for	when SFX is finished
-FADE_OUT_LENGTH:db 1			; DATA XREF: UpdateSound+45r
-					; Fade_Out+2w Fade_Out+Ar
-					; number of YM Timer overflows to handle before	incrementing the fade out counter
-FADE_OUT_TIMER:	db 63h			; DATA XREF: Main+7Ew StopMusic+B0w
-					; UpdateSound+3Fr UpdateSound+48w
-					; UpdateSound+5Cw YM1_ParseData+21Fr
-					; YM2_ParseData+254r
-					; YM2_ParseChannel6Data+D9r
-					; PSG_ParseToneData:loc_DF2r
-					; PSG_ParseNoiseData:loc_F88r
-					; Fade_Out+Dw
-					; Starts with fade out length value, decrements	at each	YM Timer overflow. set to $63 while loading music
-FADE_OUT_COUNTER:db 0			; DATA XREF: Main+79w StopMusic+ABw
-					; UpdateSound+4Br UpdateSound+4Fw
-					; DAC_SetNewSample+13r
-					; YM1_LoadInstrument+6r
-					; YM2_LoadInstrument:loc_AB6r
-					; Counts how many times	the fade out timer reached 0. Fade out stops at	value $0C.
 		db    0
-		db    0
-DAC_BANK:	db 3Ch			; DATA XREF: LoadBank+5o
-					; LoadDacSound+1Dw
-MUSIC_BANK:db 0			; DATA XREF: LoadMusicBank+8r Main+2Dw
-					; Main+3Bw
 		db    0
 TEMP_FREQUENCY:	dw 0			; DATA XREF: YM1_ParseData+15Ew
 					; YM1_ParseData+17Ar
@@ -4174,12 +4179,6 @@ TEMP_REGISTER:	db 0			; DATA XREF: YM1_LoadInstrument+50w
 					; YM2_LoadInstrument+5Bw
 					; YM2_LoadInstrument+71r
 					; temp place to	keep a register	value when an YM instrument is loaded
-FADE_IN_TIMER:	db 0			; DATA XREF: Main+5Fw UpdateSound+18o
-					; incremented at each YM Timer overflow. When it corresponds to	fade in	parameter, increment YM	instruments level until	max level
-MUSIC_DOESNT_USE_SAMPLES:db 0		; DATA XREF: Main+6Cw UpdateSound+6r
-					; YM2_ParseChannel6Data:loc_B68r
-					; YM2_ParseChannel6Data+5Er
-SAVED_MUSIC_DOESNT_USE_SAMPLES:db 0					
 					
 		align 010h					
 					
