@@ -41,6 +41,7 @@ FADE_IN_TIMER		equ 1FFBh
 FADE_IN_PARAMETERS 	equ 1FFCh	
 MUSIC_LEVEL 		equ 1FFDh
 
+RESUMING_DEACTIVATED	equ 1FEEh
 LAST_COMMAND 		equ 1FFEh	
 COMMANDS_COUNTER 	equ 1FEFh
 NEW_OPERATION 		equ 1FFFh
@@ -67,6 +68,7 @@ init:
 		ld	(YM_TIMER_VALUE), a ; init timer value without sending it to YM
 		ld	a, 0Fh
 		ld	(FADE_IN_PARAMETERS), a	; init fade in parameters : no fade in
+		call	DeactivateResuming
 		ld	a, 20h ; ' '    ; load music $20, which is void
 		call	Main		; process new operation	$20 to initialize YM and PSG with void data
 		ld	a, (DAC_BANK)
@@ -372,7 +374,11 @@ Main:
 		cp	0FCh 
 		jp	z, Save_Music	; if a = FCh : save current music
 		cp	0FBh 
-		jp	z, Resume_Music	; if a = FBh : resume saved music						
+		jp	z, Resume_Music	; if a = FBh : resume saved music	
+		cp	0FAh 
+		jp	z, ActivateResuming	; if a = FAh : activate resuming		
+		cp	0F9h 
+		jp	z, DeactivateResuming	; if a = FCh : deactivate resuming				
 		cp	0F0h ; 'ð'
 		jp	z, Update_YM_Level ; if	a = F0h
 		cp	0F1h ; 'ñ'
@@ -390,6 +396,12 @@ Resume_Previous_Music:
 		push	af
 		ld	a, (SAVED_MUSIC_CHANNEL_YM1_NOT_IN_USE)		
 		cp	01h
+		jp	nz, Test_Resuming
+		pop	af
+		jp	Not_Previous_Music
+Test_Resuming:
+		ld	a, (RESUMING_DEACTIVATED)		
+		cp	0FFh
 		jp	nz, Resume_Indeed
 		pop	af
 		jp	Not_Previous_Music
@@ -803,6 +815,14 @@ loc_42B:				; CODE XREF: UpdateSound+Aj
 		cp	0Fh
 		jr	z, loc_44C
 		inc	(hl)		; if music level not 0F, increment it and update YM instruments	levels
+		ld	a, (hl)
+		cp	0Fh
+		jr	z, update_level
+		inc	(hl)
+		ld	a, (hl)
+		cp	0Fh
+		jr	z, update_level
+		inc	(hl)
 		ld	a, (hl)
 		cp	0Fh
 		jr	z, update_level
@@ -3460,6 +3480,27 @@ YM_SetTimer:				; CODE XREF: Main+1Cj
 		pop	bc
 		ret
 ; End of function YM_SetTimer
+
+
+
+; =============== S U B	R O U T	I N E =======================================
+
+
+DeactivateResuming:				
+		ld	a, 0FFh
+		ld	(RESUMING_DEACTIVATED), a
+		ret
+; End of function DeactivateResuming
+
+
+; =============== S U B	R O U T	I N E =======================================
+
+
+ActivateResuming:				
+		ld	a, 0h
+		ld	(RESUMING_DEACTIVATED), a
+		ret
+; End of function DeactivateResuming
 
 
 ; =============== S U B	R O U T	I N E =======================================
