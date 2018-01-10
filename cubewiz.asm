@@ -30,7 +30,7 @@ DAC_BANK		equ 1FF4h
 DAC_LAST_OFFSET 	equ 1FE5h
 DAC_REMAINING_LENGTH 	equ 1FF5h
 		
-
+RESUMING_DEACTIVATED	equ 1FE8h
 
 FADE_OUT_LENGTH		equ 1FEBh
 FADE_OUT_TIMER		equ 1FECh
@@ -41,7 +41,6 @@ FADE_IN_TIMER		equ 1FFBh
 FADE_IN_PARAMETERS 	equ 1FFCh	
 MUSIC_LEVEL 		equ 1FFDh
 
-RESUMING_DEACTIVATED	equ 1FEEh
 LAST_COMMAND 		equ 1FFEh	
 COMMANDS_COUNTER 	equ 1FEFh
 NEW_OPERATION 		equ 1FFFh
@@ -67,8 +66,8 @@ init:
 		ld	a, 0FFh
 		ld	(YM_TIMER_VALUE), a ; init timer value without sending it to YM
 		ld	a, 0Fh
-		ld	(FADE_IN_PARAMETERS), a	; init fade in parameters : no fade in
-		call	DeactivateResuming
+		ld	(FADE_IN_PARAMETERS), a	; init fade in parameters : no fade in	 
+		call	ActivateResuming
 		ld	a, 20h ; ' '    ; load music $20, which is void
 		call	Main		; process new operation	$20 to initialize YM and PSG with void data
 		ld	a, (DAC_BANK)
@@ -378,7 +377,7 @@ Main:
 		cp	0FAh 
 		jp	z, ActivateResuming	; if a = FAh : activate resuming		
 		cp	0F9h 
-		jp	z, DeactivateResuming	; if a = FCh : deactivate resuming				
+		jp	z, DeactivateResuming	; if a = F9h : deactivate resuming				
 		cp	0F0h ; 'ð'
 		jp	z, Update_YM_Level ; if	a = F0h
 		cp	0F1h ; 'ñ'
