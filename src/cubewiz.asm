@@ -48,9 +48,9 @@
     include "data\algo_slots.asm"
     include "data\pitch_effects.asm"
     include "data\psg_instruments.asm"
-	align 010h	
+	align 010h, 0	
     include "data\pcm_samples.asm"
-	align 1700h
+	align 1700h, 0
     include "data\channel_data.asm"
 
 END_OF_DRIVER:
