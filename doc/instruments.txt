@@ -1,0 +1,32 @@
+YM Instruments :
+  Accessed in ROM with a byte index : limited to 256 entries.
+  29 bytes per instrument :
+    4-byte groups representing YM2612 register values for FM operators 1 to 4 :
+        $00-$03 : Register $30 - Detune and Multiple
+        $04-$07 : Register $40 - Total Level (slot operators get value $7F)
+        $08-$0B : Register $50 - Rate Scaling and Attack Rate
+        $0C-$0F : Register $60 - First Decay Rate and Amplitude Modulation
+        $10-$13 : Register $70 - Secondary Decay Rate
+        $14-$17 : Register $80 - Secondary Amplitude and Release Rate
+        $18-$1B : Register $90 - SSG-EG
+    $1C : Register $B0, Feedback and Algorithm
+
+
+DAC Samples :
+
+Format is 8-bit PCM.
+PCM Sample entries are defined in a table in Z80 RAM.
+Data layout of the 8-byte entries :
+  word 0-1 : PCM frame period parameter : higher value slows down playback
+  word 2-3 : PCM bank
+  word 5-4 : Sample length
+  word 7-6 : Sample offset
+
+
+PSG Instruments : 
+  PSG Instruments affect the output level with 2 envelope stages : Attack and Release.
+  Attack and Release are defined as 2 distinct parts following the same format : "0x" bytes ended by an "8x" byte
+  Attack and Release process a single byte per sound update.
+  The output level of the channel is the result of (instrument total level - $F + x)
+  When the 8x byte is reached, it keeps using that same x value until the note is released or until a new note is played.
+

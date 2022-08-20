@@ -1,0 +1,153 @@
+The music bank starts with a pointer table of $20 entries.
+This pointer table is usually at the very beginning of the bank, but some games use the same bank
+to store other data like YM instruments, so the pointer table can be somewhere further in the bank.
+
+
+MUSIC DATA LAYOUT : 
+
+$00 : Always $00.
+$01 : Set to 1 if YM6 uses FM mode. Otherwise, YM6 uses DAC mode.
+$02 : Always $00.
+$03 : YM Timer B value. This defines the frequency of sound updates, i.e. music tempo but also SFX play speed.
+$04-$17 : Pointer Table of 10 entries, each entry being the command stream to parse for each respective Channel.
+$18... : Channel data entries stored sequentially.
+
+There are 4 command sets depending on the channel :
+- YM Channels in FM mode
+- YM Channel 6 in DAC mode
+- PSG Tone Channels 1,2,3
+- PSG Noise Channel
+
+
+YM FM commands : 
+
+  xx (yy)    Play Note xx bits 6-0 (YM range : $00-$53)
+             If bit 7 is set, then Set New Note Length yy
+
+  $70        Play Silence for Note Length
+  $F0 xx     Play silence for new Note Length xx
+
+  $F8        Loop Command, more details in dedicated section below
+
+  $F9 xy     Note/Frequency Shifting :
+             - bit 7 : note shift up (0) or down (1)
+             - bits 6-5-4 : add value * 2 to note frequencies, to shift them slightly  
+             - nibble y : shift notes by y notes up/down depending on bit 7
+
+  $FA xx     Set stereo panning : bit 7=LEFT, bit 6=RIGHT
+
+  $FB xy     Load Vibrato x, triggered at Note Length 2*y
+
+  $FC xx     Set Key Release or Pitch Slides :
+             - xx < 80 : Release key at (note length - xx)
+             - xx = 80 : No key release, even between different notes
+             - 80<xx<FF : Pitch slide, with xx bits 6-0 = slide speed
+             - xx = FF : No pitch slide
+
+  $FD 0x     Set Output Level x and reload instrument
+
+  $FE xx     Set Next Instrument xx
+
+  $FF 00 00  End
+
+  $FF xx 00  Only for YM Channels 1,2,3 : set new operation xx (play music/sfx xx, fade out ...).
+
+  $FF xx xx  Jump to xxxx.
+
+
+YM Channel 6 DAC commands :
+
+  xx (yy)    Play Sample xx bits 6-0 
+             If bit 7 is set, then Set New Sample Play Length yy
+
+  $70        Play Silence for Note Length
+  $F0 xx     Play silence for new Note Length xx
+
+  $F8        Loop Command, more details in dedicated section below
+
+  $FA xx     Set stereo panning : bit 7=LEFT, bit 6=RIGHT
+
+  $FC xx     Stop sample play at (Sample Play Length - xx)
+             If bit 7 = 1, samples are played until they end or until another sample is played.
+             
+  $FF 00 00  End
+
+  $FF xx xx  Jump to xxxx.
+
+
+PSG Tone commands :
+
+  xx (yy)    Play Note xx bits 6-0 (PSG range : $00-$3F)
+             If bit 7 is set, then Set New Note Length yy
+
+  $70        Play Silence for Note Length
+  $F0 xx     Play silence for new Note Length xx
+
+  $F8        Loop Command, more details in dedicated section below
+
+  $F9 xy     Note/Frequency Shifting :
+             - bit 7 : note shift up (0) or down (1)
+             - bits 6-5-4 : add value * 2 to note frequencies, to shift them slightly  
+             - nibble y : shift notes by y notes up/down depending on bit 7
+
+  $FA xx     Set YM Timer value with xx
+
+  $FB xy     Load Vibrato x, triggered at Note Length 2*y
+
+  $FC xx     Set Key Release at note length - bits 6-0
+             If bit 7 is set to 1, then never release key
+
+  $FD 0x     Load PSG Instrument x at total level y
+
+  $FF 00 00  End
+
+  $FF xx xx  Jump to xxxx.
+
+
+PSG Noise commands :
+
+  xx (yy)    Play Noise with xx bit 2 = feedback, bits 1-0 = frequency
+             If bit 7 is set, then Set New Play Length yy
+
+  $70        Play Silence for Play Length
+  $F0 xx     Play silence for new Play Length xx
+
+  $F8        Loop Command, more details in dedicated section below
+
+  $FC xx     Set Key Release at Play Length - bits 6-0
+             If bit 7 is set to 1, then never release key
+
+  $FD 0x     Load PSG Instrument x at total level y
+
+  $FF 00 00  End
+
+  $FF xx xx  Jump to xxxx.
+
+    
+LOOP COMMANDS :
+
+  Infinite loop
+    F8 00  Loop Start
+    F8 A1    Loop End : Go back to Loop Start.
+  
+  Volta Brackets (repeat with different ending sections)
+    F8 20    Volta Start
+    F8 A0    Volta End : Go back to Repeat Start. Used before Section 2/3 Starts.
+    F8 40    Volta Section 1 Start : Play section once, and then skip to Section 2 next times.
+    F8 60    Volta Section 2 Start : Play section once, and then skip to Section 3 next times.
+    F8 80    Volta Section 3 start : No skip for this section, will be played everytime it's reached.
+    Typical usage :
+      Volta Start
+      [...]
+      Volta Section 1 Start
+      [...]
+      Volta End
+      Volta Section 2 Start
+      [...]
+      Volta End
+      Volta Section 3 Start
+      [...]
+  
+  Loop with counter
+    F8 Cx/Dx  Loop Start, to repeat x+1 times (x value on 5 bits, max value $1F+1=32 times)
+    F8 E0     Loop End

@@ -1,0 +1,16 @@
+SFX DATA LAYOUT : 
+
+  byte 00      SFX Type : 01 or 02
+               SFX Type 1 :
+               This type can use any channel. In original Cube implementation, these channels are stolen from Music.
+               In Cube/Wiz implementation, these channels now borrow the channels and give them back to Music, like SFX Type 2.
+               SFX Type 2 :
+               This type only uses 3 channels : YM4, 5 and 6. 
+               In original Cube implementation, the channels were already borrowed and given back to Music.
+
+  From byte 01
+    SFX Type 1 : pointer table to commands for all 10 channels
+    SFX Type 2 : pointer table to commands for only 3 channels (YM4, 5, 6)
+
+  After pointer table, channel data entries are stored sequentially, like music.
+  Commands are processed identically to music channel data : refer to music.txt for details.

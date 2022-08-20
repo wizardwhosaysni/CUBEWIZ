@@ -1,0 +1,27 @@
+Channel RAM Data
+$00-$01 Data cursor
+$02     Time counter for note/sample play length
+$03     channel is free/inactive (set to 1)
+$04     Output level, from $00 to $0F
+$05     YM algorithm / PSG actual output level (=base-$F+instrument)
+$06     Key release value. Release key when time counter 02 reaches this value.
+$07     Note/sample play length
+$08     Set to $80 when there is no key release, even between different notes
+$09     Vibrato delay time
+$0A     Time counter for vibrato
+$0B-$0C Vibrato data start pointer
+$0D     Vibrato data cursor
+$0E-$0F Current YM frequency
+$10     YM Instrument / PSG Instrument Pointer (bytes $10-$11)
+$11-$12 Target YM frequency for slide / PSG Instrument Cursor (byte $12)
+$13-$14 Infinite Loop start pointer
+$15-$16 Volta Brackets start pointer
+$17-$18 Counted Loop start pointer
+$19     Counted Loop counter
+$1A     Volta ending 1 done (set to 1)
+$1B     Volta ending 2 done (set to 1)
+$1C     Note shift value
+$1D     Frequency shift value
+$1E     YM Stereo Output setup / PSG Key Released
+$1F     Slide speed
+
