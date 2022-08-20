@@ -48,7 +48,6 @@
     include "data\algo_slots.asm"
     include "data\pitch_effects.asm"
     include "data\psg_instruments.asm"
-    include "data\variables.asm"
 	align 010h	
     include "data\pcm_samples.asm"
 	align 1700h
