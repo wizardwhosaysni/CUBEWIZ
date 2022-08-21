@@ -1,7 +1,7 @@
 ; =============== S U B	R O U T	I N E =======================================
 
 
-LoadAnyBank:			
+LoadBank:			
 		push	hl
 		ld	hl, BANK_REGISTER 
 		ld	(hl), a

@@ -9,7 +9,7 @@ UpdateSound:				; CODE XREF: Main_Loop+7p
 		; This part activates/deactivates DAC on YM6
 		
 		ld	bc, 2B80h	; bc = enable DAC
-		ld	a, (MUSIC_DOESNT_USE_SAMPLES)
+		ld	a, (MUSIC_YM6_FM_MODE)
 		or	a
 		jr	z, loc_42B	; if music uses	DAC samples, enable DAC
 		ld	a, (SFX_CHANNEL_YM6_NOT_IN_USE)
@@ -84,7 +84,7 @@ loc_475:				; CODE XREF: UpdateSound+3Dj
 					; UpdateSound+54j
 				
 		ld	a, (MUSIC_BANK)
-		call	LoadAnyBank				
+		call	LoadBank				
 					
 		; Start of Music Update	
 					
@@ -161,7 +161,7 @@ loc_475:				; CODE XREF: UpdateSound+3Dj
 		; Start of SFX Update
 		
 		ld	a, SFX_BANK
-		call	LoadAnyBank		
+		call	LoadBank		
 		ld	a, 1
 		ld	(CURRENTLY_MANAGING_SFX), a
 		xor	a
@@ -196,7 +196,7 @@ loc_475:				; CODE XREF: UpdateSound+3Dj
 
 loc_4DE:				; CODE XREF: UpdateSound+59j
 		ld	a, (DAC_BANK)
-		call	LoadAnyBank
+		call	LoadBank
 		pop	hl
 		pop	de
 		pop	bc

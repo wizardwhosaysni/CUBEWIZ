@@ -9,7 +9,7 @@ YM1_LoadInstrument:			; CODE XREF: YM_UpdateInstrumentsLevels+12p
 					; YM1_ParseData+91p YM1_ParseData+227j
 		push	af
 		ld	a, YM_INSTRUMENTS_BANK
-		call	LoadAnyBank
+		call	LoadBank
 		pop	af
 		ld	(ix+4),	a	; a is the total level of the instrument
 		ld	a, (CURRENTLY_MANAGING_SFX) 
@@ -143,6 +143,6 @@ loc_A85:				; CODE XREF: YM1_LoadInstrument+9Aj
 smeuuh3:
 		ld	a, SFX_BANK
 smeuuh4:		
-		call	LoadAnyBank
+		call	LoadBank
 		ret
 ; End of function YM1_LoadInstrument

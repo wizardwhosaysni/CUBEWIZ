@@ -69,7 +69,7 @@ Not_Previous_Music:
 		jr	nc, loc_201	; if a > 21h, then play	music from chunk 0x1F0000
 		ld	a, MUSIC_BANK_1		; otherwise play music from 0x1F8000
 		ld	(MUSIC_BANK), a	; load 01h to 0x152D
-		call	LoadAnyBank	; load rom chunk 0x1F8000 to bank
+		call	LoadBank	; load rom chunk 0x1F8000 to bank
 		ld	a, (CURRENT_MUSIC)	
 		ld	(PREVIOUS_MUSIC), a
 		pop	af
@@ -81,7 +81,7 @@ Not_Previous_Music:
 loc_201:				; CODE XREF: Main+29j
 		ld	a, MUSIC_BANK_2	
 		ld	(MUSIC_BANK), a
-		call	LoadAnyBank	; load rom chunk 0x1F0000 to bank
+		call	LoadBank	; load rom chunk 0x1F0000 to bank
 		ld	a, (CURRENT_MUSIC)	
 		ld	(PREVIOUS_MUSIC), a
 		pop	af
@@ -115,7 +115,7 @@ Load_Music:				; CODE XREF: Main+37j
 		ld	a, (hl)		; get music data byte 1	: indicates if music uses DAC Samples
 		inc	hl		; so music byte	2 is useless ? I guess it was intended to use YM Timer A first,	which needs two	data bytes
 		inc	hl		; point	to byte	3 : YM Timer B value
-		ld	(MUSIC_DOESNT_USE_SAMPLES), a ;	indicates if music uses	DAC Samples
+		ld	(MUSIC_YM6_FM_MODE), a ;	indicates if music uses	DAC Samples
 		ld	a, (hl)
 		ld	(YM_TIMER_VALUE), a
 		call	YM_SetTimer
@@ -191,7 +191,7 @@ Load_End:				; CODE XREF: Main+12Aj	Main+134j
 		pop	de		; end of the loadSFX and loadMusic chunks
 		pop	hl
 		ld	a, (DAC_BANK)
-		jp	LoadAnyBank
+		jp	LoadBank
 ; ---------------------------------------------------------------------------
 
 Load_SFX:				; CODE XREF: Main+21j Main+53j
@@ -201,7 +201,7 @@ Load_SFX:				; CODE XREF: Main+21j Main+53j
 		ld	h, 0
 		ld	l, a
 		ld	a, SFX_BANK
-		call	LoadAnyBank		
+		call	LoadBank		
 		add	hl, hl		; a is an index, and you double	it to access to	a pointer table
 		ld	de, SFX_BANK_OFFSET	; SFX in ROM Bank		
 		add	hl, de	

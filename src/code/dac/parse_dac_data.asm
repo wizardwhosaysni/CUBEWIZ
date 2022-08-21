@@ -13,7 +13,7 @@ YM2_ParseChannel6Data:			; CODE XREF: UpdateSound+94p
 ; ---------------------------------------------------------------------------
 
 loc_B68:				; CODE XREF: YM2_ParseChannel6Data+8j
-		ld	a, (MUSIC_DOESNT_USE_SAMPLES)
+		ld	a, (MUSIC_YM6_FM_MODE)
 		or	a	
 		jp	nz, YM2_ParseData ; jump to classic parsing subroutine if channel 6 is not in DAC mode
 
@@ -63,7 +63,7 @@ loc_B97:
 		jr	nz, parseAtNewOffset ; jump when it's FF xx xx, meaning "parse from new offset xxxx"
 		ld	a, 1		; else,	you have FF 00 00, so end parsing and mute channel
 		ld	(ix+3),	a
-		ld	a, (MUSIC_DOESNT_USE_SAMPLES)
+		ld	a, (MUSIC_YM6_FM_MODE)
 		or	a
 		jr	z, return_BDE	; if music uses	DAC samples, return
 		ld	a, (CURRENTLY_MANAGING_SFX) 

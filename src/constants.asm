@@ -23,7 +23,7 @@ STACK_START                    equ 1FE0h
 SAVED_MUSIC_BANK 	           equ 1FE0h
 PREVIOUS_MUSIC 		           equ 1FE1h
 SAVED_YM_TIMER_VALUE 	       equ 1FE2h
-SAVED_MUSIC_DOESNT_USE_SAMPLES equ 1FE3h
+SAVED_MUSIC_YM6_FM_MODE equ 1FE3h
 NEW_SAMPLE_TO_LOAD 	           equ 1FE4h
 DAC_LAST_OFFSET 	           equ 1FE5h
 TEMP_FREQUENCY                 equ 1FE6h ; 2 bytes
@@ -38,7 +38,7 @@ COMMANDS_COUNTER 	           equ 1FEFh
 MUSIC_BANK 		               equ 1FF0h	
 CURRENT_MUSIC 		           equ 1FF1h
 YM_TIMER_VALUE 		           equ 1FF2h
-MUSIC_DOESNT_USE_SAMPLES       equ 1FF3h
+MUSIC_YM6_FM_MODE       equ 1FF3h
 DAC_BANK		               equ 1FF4h
 DAC_REMAINING_LENGTH 	       equ 1FF5h ; 2 bytes
 CURRENTLY_MANAGING_SFX         equ 1FF7h

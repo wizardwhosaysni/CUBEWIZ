@@ -67,5 +67,5 @@ Update_YM_Level:			; CODE XREF: Main+17j
 		ld	(hl), a
 		jp	Update_YM_Instruments
 		ld	a, (DAC_BANK)
-		jp	LoadAnyBank
+		jp	LoadBank
 ; End of function Update_YM_Level

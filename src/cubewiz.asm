@@ -41,17 +41,24 @@
     include "code\ym\set_timer.asm"
     include "code\music_resuming.asm"
     include "code\dac\send_dac_byte.asm"
-    
+	align 1400h, 0
+	align 1500h, 0
     include "data\ym_frequencies.asm"
+	align 10h, 0
     include "data\psg_freqencies.asm"
+	align 10h, 0
     include "data\ym_levels.asm"
+	align 10h, 0
     include "data\algo_slots.asm"
+	align 10h, 0
     include "data\pitch_effects.asm"
+	align 10h, 0
     include "data\psg_instruments.asm"
-	align 010h, 0	
+	align 10h, 0
     include "data\pcm_samples.asm"
-	align 1700h, 0
+    align 1800h, 0
     include "data\channel_data.asm"
+    align 1FC0h, 0
 
 END_OF_DRIVER:
 	if MOMPASS==2

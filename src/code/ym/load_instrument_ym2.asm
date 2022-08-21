@@ -13,7 +13,7 @@ YM2_LoadInstrument:			; CODE XREF: YM_UpdateInstrumentsLevels:loc_FAp
 					; YM2_ParseChannel6Data+84j
 		push	af
 		ld	a, YM_INSTRUMENTS_BANK
-		call	LoadAnyBank
+		call	LoadBank
 		pop	af
 		ld	(ix+4),	a
 		ld	a, (CURRENTLY_MANAGING_SFX) 
@@ -148,6 +148,6 @@ loc_B3E:				; CODE XREF: YM2_LoadInstrument+A5j
 smeuuh1:
 		ld	a, SFX_BANK
 smeuuh2:		
-		call	LoadAnyBank
+		call	LoadBank
 		ret
 ; End of function YM2_LoadInstrument

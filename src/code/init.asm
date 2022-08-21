@@ -14,5 +14,5 @@ init:
 		ld	a, 20h ; ' '    ; load music $20, which is void
 		call	Main		; process new operation	$20 to initialize YM and PSG with void data
 		ld	a, (DAC_BANK)
-		call	LoadAnyBank	; init loaded bank, and	enter the driver's main loop !
+		call	LoadBank	; init loaded bank, and	enter the driver's main loop !
 ; End of function init

@@ -15,7 +15,7 @@ SendDacByte:
 		or	e
 		jp	z, SendDacByte_ret
 		ld	a, (DAC_BANK)
-		call	LoadAnyBank				
+		call	LoadBank				
 		ld	a, (DAC_LAST_OFFSET)
 		ld	h, a		
 		ld	a, (DAC_LAST_OFFSET+1)
@@ -44,12 +44,12 @@ SendDacByte_YmRequest:
 		or	a
 		jp	nz, SendDacByte_ldSfxBk
 		ld	a, (MUSIC_BANK)
-		call	LoadAnyBank
+		call	LoadBank
 		jp	SendDacByte_ret
 		
 SendDacByte_ldSfxBk:		
 		ld	a, SFX_BANK
-		call	LoadAnyBank		
+		call	LoadBank		
 		
 SendDacByte_ret:
 		pop	hl

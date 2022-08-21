@@ -37,6 +37,6 @@ loc_1A0:				; CODE XREF: LoadDacSound+2j
 		xor	a
 		ld	(NEW_SAMPLE_TO_LOAD), a	; clear	to say that DAC	sound is now loaded
 		ld	a, (DAC_BANK)
-		call	LoadAnyBank	; loads	bank 0x1E0000 or 0x1E8000
+		call	LoadBank	; loads	bank 0x1E0000 or 0x1E8000
 		ret
 ; End of function LoadDacSound
