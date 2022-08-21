@@ -1,7 +1,7 @@
 Channel RAM Data
 $00-$01 Data cursor
 $02     Time counter for note/sample play length
-$03     channel is free/inactive (set to 1)
+$03     Channel is free/inactive (set to 1)
 $04     Output level, from $00 to $0F
 $05     YM algorithm / PSG actual output level (=base-$F+instrument)
 $06     Key release value. Release key when time counter 02 reaches this value.
