@@ -39,7 +39,7 @@ Main:
 Resume_Previous_Music:
 		; if saved music was finished, just load it again
 		push	af
-		ld	a, (SAVED_MUSIC_CHANNEL_YM1_NOT_IN_USE)		
+		ld	a, (SAVED_MUSIC_CHANNEL_YM1+CHANNEL_FREE)		
 		cp	01h
 		jp	nz, Test_Resuming
 		pop	af
@@ -176,12 +176,12 @@ Activate_Stereo_Outputs:		; CODE XREF: Main+E1j
 		djnz	Activate_Stereo_Outputs
 		
 		ld	a, 0C0h	; '�'   ; set C0h for byte 1E of YM channels
-		ld	(MUSIC_CHANNEL_YM1_STEREO), a
-		ld	(MUSIC_CHANNEL_YM2_STEREO), a
-		ld	(MUSIC_CHANNEL_YM3_STEREO), a		
-		ld	(MUSIC_CHANNEL_YM4_STEREO), a
-		ld	(MUSIC_CHANNEL_YM5_STEREO), a
-		ld	(MUSIC_CHANNEL_YM6_STEREO), a
+		ld	(MUSIC_CHANNEL_YM1+STEREO_PANNING), a
+		ld	(MUSIC_CHANNEL_YM2+STEREO_PANNING), a
+		ld	(MUSIC_CHANNEL_YM3+STEREO_PANNING), a		
+		ld	(MUSIC_CHANNEL_YM4+STEREO_PANNING), a
+		ld	(MUSIC_CHANNEL_YM5+STEREO_PANNING), a
+		ld	(MUSIC_CHANNEL_YM6+STEREO_PANNING), a
 		ld	a, 0FEh	; '�'   ; put value FE as DAC Sound sample to load ... which loads nothing. Why such a thing then ?
 		ld	(NEW_SAMPLE_TO_LOAD), a	; stores the index of a	new DAC	sample to play
 		call	YM_LoadTimerB

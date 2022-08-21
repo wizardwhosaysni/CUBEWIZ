@@ -58,3 +58,35 @@ YM2_REGISTER                   equ 4002h
 YM2_DATA                       equ 4003h
 BANK_REGISTER                  equ 6000h
 PSG_PORT                       equ 7F11h
+
+; Channel data offsets
+DATA_CURSOR                    equ 00h     ; $00-$01 Data cursor
+TIME_COUNTER                   equ 02h     ; $02     Time counter for note/sample play length
+CHANNEL_FREE                   equ 03h     ; $03     Channel is free/inactive (set to 1)
+OUTPUT_LEVEL                   equ 04h     ; $04     Output level, from $00 to $0F
+YM_ALGORITHM                   equ 05h
+PSG_OUTPUT_LEVEL               equ 05h     ; $05     YM algorithm / PSG actual output level (=base-$F+instrument)
+KEY_RELEASE                    equ 06h     ; $06     Key release value. Release key when time counter 02 reaches this value.
+PLAY_LENGTH                    equ 07h     ; $07     Note/sample play length
+NO_RELEASE                     equ 08h     ; $08     Set to $80 when there is no key release, even between different notes
+VIBRATO_DELAY                  equ 09h     ; $09     Vibrato delay time
+VIBRATO_COUNTER                equ 0Ah     ; $0A     Time counter for vibrato
+VIBRATO_POINTER                equ 0Bh     ; $0B-$0C Vibrato data start pointer
+VIBRATO_CURSOR                 equ 0Dh     ; $0D     Vibrato data cursor
+YM_FREQUENCY                   equ 0Eh     ; $0E-$0F Current YM frequency
+YM_INSTRUMENT_ID               equ 10h
+PSG_INSTRUMENT_POINTER         equ 10h     ; $10     YM Instrument / PSG Instrument Pointer (bytes $10-$11)
+YM_TARGET_FREQUENCY            equ 11h
+PSG_INSTRUMENT_CURSOR          equ 12h     ; $11-$12 Target YM frequency for slide / PSG Instrument Cursor (byte $12)
+INFINITE_LOOP_START_POINTER    equ 13h     ; $13-$14 Infinite Loop start pointer
+VOLTA_START_POINTER            equ 15h     ; $15-$16 Volta Brackets start pointer
+COUNTED_LOOP_POINTER           equ 17h     ; $17-$18 Counted Loop start pointer
+COUNTER_LOOP_COUNTER           equ 19h     ; $19     Counted Loop counter
+VOLTA_END_1_DONE               equ 1Ah     ; $1A     Volta ending 1 done (set to 1)
+VOLTA_END_2_DONE               equ 1Bh     ; $1B     Volta ending 2 done (set to 1)
+NOTE_SHIFT                     equ 1Ch     ; $1C     Note shift value
+FREQUENCY_SHIFT                equ 1Dh     ; $1D     Frequency shift value
+STEREO_PANNING                 equ 1Eh     ; $1E     YM Stereo Output setup / PSG Key Released
+SLIDE_SPEED                    equ 1Fh     ; $1F     Slide speed
+
+

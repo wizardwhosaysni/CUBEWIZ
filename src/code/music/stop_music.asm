@@ -79,7 +79,7 @@ loc_3E3:				; CODE XREF: StopMusic+76j
 		ld	(hl), a		; set PSG channel 3 volume to 0
 		ld	a, 0FFh
 		ld	(hl), a		; set PSG noise	channel	volume to 0
-		ld	hl, MUSIC_CHANNEL_YM1_NOT_IN_USE ; also pointed once	from 68k, to know if music/sfx is currently being played, I guess
+		ld	hl, MUSIC_CHANNEL_YM1+CHANNEL_FREE ; also pointed once	from 68k, to know if music/sfx is currently being played, I guess
 		ld	de, 30h	; ' '   ; value to add to pointer to go to next channel in ram
 		ld	b, 0Ah		; loop ten times
 		ld	a, 1

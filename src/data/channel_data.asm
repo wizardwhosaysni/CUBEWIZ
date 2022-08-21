@@ -1,367 +1,51 @@
+		
+		
+
+		align	30h,0
 		db  "MUSICYM1"	
 		align	10h, 0
 MUSIC_CHANNEL_YM1:
-		db 0			
-		db 0			
-		db 0			
-MUSIC_CHANNEL_YM1_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-MUSIC_CHANNEL_YM1_STEREO: db  0
-		db  0	
+		align	30h,0
 		db  "MUSICYM2"
 		align	10h,0		
 MUSIC_CHANNEL_YM2:
-		db 0			
-		db 0			
-		db 0			
-MUSIC_CHANNEL_YM2_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-MUSIC_CHANNEL_YM2_STEREO: db  0
-		db  0
+		align	30h,0
 		db  "MUSICYM3"		
 		align	10h,0			
 MUSIC_CHANNEL_YM3:
-		db 0			
-		db 0			
-		db 0			
-MUSIC_CHANNEL_YM3_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-MUSIC_CHANNEL_YM3_STEREO: db  0
-		db  0
+		align	30h,0
 		db  "MUSICYM4"	
 		align	10h,0	
 MUSIC_CHANNEL_YM4:
-		db 0			
-		db 0			
-		db 0			
-MUSIC_CHANNEL_YM4_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-MUSIC_CHANNEL_YM4_STEREO:		db  0
-		db  0
+		align	30h,0
 		db  "MUSICYM5"		
 		align	10h,0	
 MUSIC_CHANNEL_YM5:
-		db 0			
-		db 0			
-		db 0			
-MUSIC_CHANNEL_YM5_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-MUSIC_CHANNEL_YM5_STEREO:		db  0
-		db  0	
+		align	30h,0
 		db  "MUSICYM6"
 		align	10h,0			
 MUSIC_CHANNEL_YM6:
-		db 0			
-		db 0			
-		db 0			
-MUSIC_CHANNEL_YM6_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-MUSIC_CHANNEL_YM6_STEREO:		db  0
-		db  0
+		align	30h,0
 		db  "MUSICTN1"	
 		align	10h,0			
 MUSIC_CHANNEL_PSG1:
-		db 0			
-		db 0			
-		db 0			
-MUSIC_CHANNEL_PSG1_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0	
+		align	30h,0
 		db  "MUSICTN2"
-		align	10h,0				
-MUSIC_CHANNEL_PSG2:
-		db 0			
-		db 0			
-		db 0			
-MUSIC_CHANNEL_PSG2_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0	
+		align	10h,0
+		align	30h,0
 		db  "MUSICTN3"	
-		align	10h,0				
-MUSIC_CHANNEL_PSG3:
-		db 0			
-		db 0			
-		db 0			
-MUSIC_CHANNEL_PSG3_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0	
+		align	10h,0
+		align	30h,0	
 		db  "MUSICNOI"			
 		align	10h,0
 MUSIC_CHANNEL_NOISE:
-		db 0			
-		db 0			
-		db 0			
-MUSIC_CHANNEL_NOISE_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		align	10h,0
+		align	30h,0
 		db  "SFXYM1"		
 		align	10h,0		
 SFX_CHANNEL_YM1:
 		db 0			
 		db 0			
 		db 0			
-SFX_CHANNEL_YM1_NOT_IN_USE:
 		db 1		
 		db 0Eh
 		db  0
@@ -372,27 +56,12 @@ SFX_CHANNEL_YM1_NOT_IN_USE:
 		db  0
 		db 6Bh
 		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		align	10h,0		
+		align	30h,0	
 		db  "SFXYM2"
 		align	10h,0					
-SFX_CHANNEL_YM2:
 		db 0			
 		db 0			
 		db 0			
-SFX_CHANNEL_YM2_NOT_IN_USE:
 		db 1		
 		db 0Eh
 		db  0
@@ -403,30 +72,12 @@ SFX_CHANNEL_YM2_NOT_IN_USE:
 		db  0
 		db 6Bh
 		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		align	10h,0
+		align	30h,0
 		db  "SFXYM3"		
 		align	10h,0	
-SFX_CHANNEL_YM3:
 		db 0			
 		db 0			
 		db 0			
-SFX_CHANNEL_YM3_NOT_IN_USE:
 		db 1		
 		db 0Eh
 		db  0
@@ -437,23 +88,7 @@ SFX_CHANNEL_YM3_NOT_IN_USE:
 		db  0
 		db 6Bh
 		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		align	10h,0
+		align	30h,0
 		db  "SFXYM4"		
 		align	10h,0	
 SFX_CHANNEL_YM4:
@@ -471,28 +106,9 @@ SFX_CHANNEL_YM4_NOT_IN_USE:
 		db  0
 		db 6Bh
 		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-SFX_CHANNEL_YM4_STEREO:		db  0
-		db  0
+		align	30h,0
 		db  "SFXYM5"	
 		align	10h,0		
-SFX_CHANNEL_YM5:
 		db 0			
 		db 0			
 		db 0			
@@ -507,28 +123,9 @@ SFX_CHANNEL_YM5_NOT_IN_USE:
 		db  0
 		db 6Bh
 		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-SFX_CHANNEL_YM5_STEREO:		db  0
-		db  0	
+		align	30h,0
 		db  "SFXYM6"		
 		align	10h,0
-SFX_CHANNEL_YM6:
 		db 0			
 		db 0			
 		db 0			
@@ -543,32 +140,12 @@ SFX_CHANNEL_YM6_NOT_IN_USE:
 		db  0
 		db 6Bh
 		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-SFX_CHANNEL_YM6_STEREO:		db  0
-		db  0	
-		db  "SFXTONE1"	
+		align	30h,0
+		db  "SFXTN1"	
 		align	10h,0		
-SFX_CHANNEL_PSG1:
 		db 0			
 		db 0			
 		db 0			
-SFX_CHANNEL_PSG1_NOT_IN_USE:
 		db 1		
 		db 0Eh
 		db  0
@@ -579,23 +156,12 @@ SFX_CHANNEL_PSG1_NOT_IN_USE:
 		db  0
 		db 6Bh
 		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		align	10h,0
-		db  "SFXTONE2"	
+		align	30h,0
+		db  "SFXTN2"	
 		align	10h,0		
-SFX_CHANNEL_PSG2:
 		db 0			
 		db 0			
 		db 0			
-SFX_CHANNEL_PSG2_NOT_IN_USE:
 		db 1		
 		db 0Eh
 		db  0
@@ -606,26 +172,12 @@ SFX_CHANNEL_PSG2_NOT_IN_USE:
 		db  0
 		db 6Bh
 		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		align	10h,0
-		db  "SFXTONE3"	
+		align	30h,0
+		db  "SFXTN3"	
 		align	10h,0			
-SFX_CHANNEL_PSG3:
 		db 0			
 		db 0			
 		db 0			
-SFX_CHANNEL_PSG3_NOT_IN_USE:
 		db 1		
 		db 0Eh
 		db  0
@@ -636,31 +188,12 @@ SFX_CHANNEL_PSG3_NOT_IN_USE:
 		db  0
 		db 6Bh
 		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		align	10h,0
-		db  "SFXNOISE"	
+		align	30h,0
+		db  "SFXNOI"	
 		align	10h,0		
-SFX_CHANNEL_NOISE:
 		db 0			
 		db 0			
 		db 0			
-SFX_CHANNEL_NOISE_NOT_IN_USE:
 		db 1		
 		db 0Eh
 		db  0
@@ -671,22 +204,7 @@ SFX_CHANNEL_NOISE_NOT_IN_USE:
 		db  0
 		db 6Bh
 		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		align	10h,0
+		align	30h,0
 		db  "SAVEDYM1"		
 		align	10h,0	
 SAVED_MUSIC_CHANNEL_YM1:
@@ -694,616 +212,49 @@ SAVED_MUSIC_CHANNEL_YM1:
 		db 0			
 		db 0			
 SAVED_MUSIC_CHANNEL_YM1_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		align	10h,0
-		db  "SAVEDYM2"		
-		align	10h,0				
-SAVED_MUSIC_CHANNEL_YM2:
-		db 0			
-		db 0			
-		db 0			
-SAVED_MUSIC_CHANNEL_YM2_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		align	10h,0
+		align	30h,0
+		db  "SAVEDYM2"	
+		align	30h,0
 		db  "SAVEDYM3"	
-		align	10h,0		
-SAVED_MUSIC_CHANNEL_YM3:
-		db 0			
-		db 0			
-		db 0			
-SAVED_MUSIC_CHANNEL_YM3_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		align	10h,0
+		align	30h,0
 		db  "SAVEDYM4"
-		align	10h,0			
-SAVED_MUSIC_CHANNEL_YM4:
-		db 0			
-		db 0			
-		db 0			
-SAVED_MUSIC_CHANNEL_YM4_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		align	10h,0
-		db  "SAVEDYM5"		
-		align	10h,0	
-SAVED_MUSIC_CHANNEL_YM5:
-		db 0			
-		db 0			
-		db 0			
-SAVED_MUSIC_CHANNEL_YM5_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		align	10h,0
-		db  "SAVEDYM6"	
-		align	10h,0	
-SAVED_MUSIC_CHANNEL_YM6:
-		db 0			
-		db 0			
-		db 0			
-SAVED_MUSIC_CHANNEL_YM6_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		align	10h,0
+		align	30h,0
+		db  "SAVEDYM5"
+		align	30h,0
+		db  "SAVEDYM6"
+		align	30h,0
 		db  "SAVEDTN1"	
-		align	10h,0			
-SAVED_MUSIC_CHANNEL_PSG1:
-		db 0			
-		db 0			
-		db 0			
-SAVED_MUSIC_CHANNEL_PSG1_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		align	10h,0
-		db  "SAVEDTN2"				
-SAVED_MUSIC_CHANNEL_PSG2:
-		db 0			
-		db 0			
-		db 0			
-SAVED_MUSIC_CHANNEL_PSG2_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		align	10h,0
-		db  "SAVEDTN3"	
-		align	10h,0					
-SAVED_MUSIC_CHANNEL_PSG3:
-		db 0			
-		db 0			
-		db 0			
-SAVED_MUSIC_CHANNEL_PSG3_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		align	10h,0
+		align	30h,0
+		db  "SAVEDTN2"
+		align	30h,0
+		db  "SAVEDTN3"
+		align	30h,0
 		db  "SAVEDNOI"	
-		align	10h,0				
-SAVED_MUSIC_CHANNEL_NOISE:
-		db 0			
-		db 0			
-		db 0			
-SAVED_MUSIC_CHANNEL_NOISE_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		
-		
-		align	10h,0
+		align	30h,0
+
 		db  "TMPCPYM1"
 		align	10h,0	
 TMPCPY_MUSIC_CHANNEL_YM1:
-		db 0			
-		db 0			
-		db 0			
-TMPCPY_MUSIC_CHANNEL_YM1_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		align	10h,0
-		db  "TMPCPYM2"		
-		align	10h,0				
-TMPCPY_MUSIC_CHANNEL_YM2:
-		db 0			
-		db 0			
-		db 0			
-TMPCPY_MUSIC_CHANNEL_YM2_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		align	10h,0
+		align	30h,0
+		db  "TMPCPYM2"	
+		align	30h,0
 		db  "TMPCPYM3"	
-		align	10h,0		
-TMPCPY_MUSIC_CHANNEL_YM3:
-		db 0			
-		db 0			
-		db 0			
-TMPCPY_MUSIC_CHANNEL_YM3_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		align	10h,0
+		align	30h,0
 		db  "TMPCPYM4"
-		align	10h,0			
-TMPCPY_MUSIC_CHANNEL_YM4:
-		db 0			
-		db 0			
-		db 0			
-TMPCPY_MUSIC_CHANNEL_YM4_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		align	10h,0
-		db  "TMPCPYM5"		
-		align	10h,0	
-TMPCPY_MUSIC_CHANNEL_YM5:
-		db 0			
-		db 0			
-		db 0			
-TMPCPY_MUSIC_CHANNEL_YM5_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		align	10h,0
+		align	30h,0
+		db  "TMPCPYM5"	
+		align	30h,0
 		db  "TMPCPYM6"	
-		align	10h,0	
-TMPCPY_MUSIC_CHANNEL_YM6:
-		db 0			
-		db 0			
-		db 0			
-TMPCPY_MUSIC_CHANNEL_YM6_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		align	10h,0
+		align	30h,0
 		db  "TMPCPTN1"	
-		align	10h,0			
-TMPCPY_MUSIC_CHANNEL_PSG1:
-		db 0			
-		db 0			
-		db 0			
-TMPCPY_MUSIC_CHANNEL_PSG1_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		align	10h,0
-		db  "TMPCPTN2"				
-TMPCPY_MUSIC_CHANNEL_PSG2:
-		db 0			
-		db 0			
-		db 0			
-TMPCPY_MUSIC_CHANNEL_PSG2_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		align	10h,0
-		db  "TMPCPTN3"	
-		align	10h,0					
-TMPCPY_MUSIC_CHANNEL_PSG3:
-		db 0			
-		db 0			
-		db 0			
-TMPCPY_MUSIC_CHANNEL_PSG3_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		align	10h,0
-		db  "TMPCPNOI"	
-		align	10h,0				
-TMPCPY_MUSIC_CHANNEL_NOISE:
-		db 0			
-		db 0			
-		db 0			
-TMPCPY_MUSIC_CHANNEL_NOISE_NOT_IN_USE:
-		db 1		
-		db 0Eh
-		db  0
-		db  1
-		db 18h
-		db  0
-		db  0
-		db  0
-		db 6Bh
-		db 12h
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		db  0
-		align	10h,0		
-TMPCPY_MUSIC_BANK:
+		align	30h,0
+		db  "TMPCPTN2"
+		align	30h,0
+		db  "TMPCPTN3"
+		align	30h,0
+		db  "TMPCPNOI"
+		align	30h,0		
+TMPCPY_MUSIC_BANK: 
 		db  0		
 TMPCPY_MUSIC_DOESNT_USE_SAMPLES:
 		db  0		
