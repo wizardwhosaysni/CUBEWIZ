@@ -82,7 +82,7 @@ loc_AF2:				; CODE XREF: YM2_LoadInstrument+59j
 		push	hl
 		ld	d, 0
 		ld	e, a
-		ld	hl, t_YM_LEVELS
+		ld	hl, YM_LEVELS
 		ld	b, e
 		add	hl, de
 		ld	c, (hl)

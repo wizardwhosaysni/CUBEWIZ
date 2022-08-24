@@ -77,7 +77,7 @@ loc_A39:				; CODE XREF: YM1_LoadInstrument+4Ej
 		push	hl
 		ld	d, 0
 		ld	e, a
-		ld	hl, t_YM_LEVELS
+		ld	hl, YM_LEVELS
 		ld	b, e
 		add	hl, de
 		ld	c, (hl)		; put corresponding value in c
