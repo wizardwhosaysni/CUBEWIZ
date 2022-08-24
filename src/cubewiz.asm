@@ -45,7 +45,7 @@
 	align 1500h, 0
     include "data\ym_frequencies.asm"
 	align 10h, 0
-    include "data\psg_freqencies.asm"
+    include "data\psg_frequencies.asm"
 	align 10h, 0
     include "data\ym_levels.asm"
 	align 10h, 0
