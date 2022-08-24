@@ -49,61 +49,61 @@ MUSIC_CHANNEL_NOISE:
     align  10h,0    
 SFX_CHANNEL_YM1:
     db 0, 0, 0, 1, 0Eh, 0, 1, 24, 0, 0, 0
-    dw byte_126B
+    dw PITCH_EFFECT_0
     align  30h,0  
     db  "SFXYM2"
     align  10h,0    
 SFX_CHANNEL_YM2:       
     db 0, 0, 0, 1, 0Eh, 0, 1, 24, 0, 0, 0
-    dw byte_126B
+    dw PITCH_EFFECT_0
     align  30h,0
     db  "SFXYM3"    
     align  10h,0    
 SFX_CHANNEL_YM3:
     db 0, 0, 0, 1, 0Eh, 0, 1, 24, 0, 0, 0
-    dw byte_126B
+    dw PITCH_EFFECT_0
     align  30h,0
     db  "SFXYM4"    
     align  10h,0  
 SFX_CHANNEL_YM4:
     db 0, 0, 0, 1, 0Eh, 0, 1, 24, 0, 0, 0
-    dw byte_126B
+    dw PITCH_EFFECT_0
     align  30h,0
     db  "SFXYM5"  
     align  10h,0   
 SFX_CHANNEL_YM5:  
     db 0, 0, 0, 1, 0Eh, 0, 1, 24, 0, 0, 0
-    dw byte_126B
+    dw PITCH_EFFECT_0
     align  30h,0
     db  "SFXYM6"    
     align  10h,0   
 SFX_CHANNEL_YM6: 
     db 0, 0, 0, 1, 0Eh, 0, 1, 24, 0, 0, 0
-    dw byte_126B
+    dw PITCH_EFFECT_0
     align  30h,0
     db  "SFXTN1"  
     align  10h,0      
 SFX_CHANNEL_PSG1:
     db 0, 0, 0, 1, 0Eh, 0, 1, 24, 0, 0, 0
-    dw byte_126B
+    dw PITCH_EFFECT_0
     align  30h,0
     db  "SFXTN2"  
     align  10h,0   
 SFX_CHANNEL_PSG2:   
     db 0, 0, 0, 1, 0Eh, 0, 1, 24, 0, 0, 0
-    dw byte_126B
+    dw PITCH_EFFECT_0
     align  30h,0
     db  "SFXTN3"  
     align  10h,0   
 SFX_CHANNEL_YPSG3:
     db 0, 0, 0, 1, 0Eh, 0, 1, 24, 0, 0, 0
-    dw byte_126B
+    dw PITCH_EFFECT_0
     align  30h,0
     db  "SFXNOI"  
     align  10h,0   
 SFX_CHANNEL_NOISE:   
     db 0, 0, 0, 1, 0Eh, 0, 1, 24, 0, 0, 0
-    dw byte_126B
+    dw PITCH_EFFECT_0
     align  30h,0
 
  ; Music resuming feature always keeping state of previous music   
