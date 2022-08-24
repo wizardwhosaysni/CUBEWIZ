@@ -1,3 +1,7 @@
+; Reserved RAM space for music and SFX channel states,
+; as well as more space for music resuming feature.
+; See doc/channel_data.txt for content details.
+
     db  "MSCYM1"  
     align  10h, 0
 MUSIC_CHANNEL_YM1:
@@ -28,186 +32,84 @@ MUSIC_CHANNEL_PSG1:
     align  30h,0
     db  "MSCTN2"
     align  10h,0
+MUSIC_CHANNEL_PSG2:
     align  30h,0
     db  "MSCTN3"  
     align  10h,0
+MUSIC_CHANNEL_PSG3:
     align  30h,0  
     db  "MSCNOI"      
     align  10h,0
 MUSIC_CHANNEL_NOISE:
     align  30h,0
+
+; SFX channel data requires proper initialization
+; TODO : identify and keep only what is required exactly    
     db  "SFXYM1"    
     align  10h,0    
 SFX_CHANNEL_YM1:
-    db 0      
-    db 0      
-    db 0      
-    db 1    
-    db 0Eh
-    db  0
-    db  1
-    db 18h
-    db  0
-    db  0
-    db  0
-    db 6Bh
-    db 12h
+    db 0, 0, 0, 1, 0Eh, 0, 1, 24, 0, 0, 0
+    dw byte_126B
     align  30h,0  
     db  "SFXYM2"
-    align  10h,0          
-    db 0      
-    db 0      
-    db 0      
-    db 1    
-    db 0Eh
-    db  0
-    db  1
-    db 18h
-    db  0
-    db  0
-    db  0
-    db 6Bh
-    db 12h
+    align  10h,0    
+SFX_CHANNEL_YM2:       
+    db 0, 0, 0, 1, 0Eh, 0, 1, 24, 0, 0, 0
+    dw byte_126B
     align  30h,0
     db  "SFXYM3"    
-    align  10h,0  
-    db 0      
-    db 0      
-    db 0      
-    db 1    
-    db 0Eh
-    db  0
-    db  1
-    db 18h
-    db  0
-    db  0
-    db  0
-    db 6Bh
-    db 12h
+    align  10h,0    
+SFX_CHANNEL_YM3:
+    db 0, 0, 0, 1, 0Eh, 0, 1, 24, 0, 0, 0
+    dw byte_126B
     align  30h,0
     db  "SFXYM4"    
     align  10h,0  
 SFX_CHANNEL_YM4:
-    db 0      
-    db 0      
-    db 0      
-SFX_CHANNEL_YM4_NOT_IN_USE:
-    db 1    
-    db 0Eh
-    db  0
-    db  1
-    db 18h
-    db  0
-    db  0
-    db  0
-    db 6Bh
-    db 12h
+    db 0, 0, 0, 1, 0Eh, 0, 1, 24, 0, 0, 0
+    dw byte_126B
     align  30h,0
     db  "SFXYM5"  
-    align  10h,0    
-    db 0      
-    db 0      
-    db 0      
-SFX_CHANNEL_YM5_NOT_IN_USE:
-    db 1    
-    db 0Eh
-    db  0
-    db  1
-    db 18h
-    db  0
-    db  0
-    db  0
-    db 6Bh
-    db 12h
+    align  10h,0   
+SFX_CHANNEL_YM5:  
+    db 0, 0, 0, 1, 0Eh, 0, 1, 24, 0, 0, 0
+    dw byte_126B
     align  30h,0
     db  "SFXYM6"    
-    align  10h,0
-    db 0      
-    db 0      
-    db 0      
-SFX_CHANNEL_YM6_NOT_IN_USE:
-    db 1    
-    db 0Eh
-    db  0
-    db  1
-    db 18h
-    db  0
-    db  0
-    db  0
-    db 6Bh
-    db 12h
+    align  10h,0   
+SFX_CHANNEL_YM6: 
+    db 0, 0, 0, 1, 0Eh, 0, 1, 24, 0, 0, 0
+    dw byte_126B
     align  30h,0
     db  "SFXTN1"  
-    align  10h,0    
-    db 0      
-    db 0      
-    db 0      
-    db 1    
-    db 0Eh
-    db  0
-    db  1
-    db 18h
-    db  0
-    db  0
-    db  0
-    db 6Bh
-    db 12h
+    align  10h,0      
+SFX_CHANNEL_PSG1:
+    db 0, 0, 0, 1, 0Eh, 0, 1, 24, 0, 0, 0
+    dw byte_126B
     align  30h,0
     db  "SFXTN2"  
-    align  10h,0    
-    db 0      
-    db 0      
-    db 0      
-    db 1    
-    db 0Eh
-    db  0
-    db  1
-    db 18h
-    db  0
-    db  0
-    db  0
-    db 6Bh
-    db 12h
+    align  10h,0   
+SFX_CHANNEL_PSG2:   
+    db 0, 0, 0, 1, 0Eh, 0, 1, 24, 0, 0, 0
+    dw byte_126B
     align  30h,0
     db  "SFXTN3"  
-    align  10h,0      
-    db 0      
-    db 0      
-    db 0      
-    db 1    
-    db 0Eh
-    db  0
-    db  1
-    db 18h
-    db  0
-    db  0
-    db  0
-    db 6Bh
-    db 12h
+    align  10h,0   
+SFX_CHANNEL_YPSG3:
+    db 0, 0, 0, 1, 0Eh, 0, 1, 24, 0, 0, 0
+    dw byte_126B
     align  30h,0
     db  "SFXNOI"  
-    align  10h,0    
-    db 0      
-    db 0      
-    db 0      
-    db 1    
-    db 0Eh
-    db  0
-    db  1
-    db 18h
-    db  0
-    db  0
-    db  0
-    db 6Bh
-    db 12h
+    align  10h,0   
+SFX_CHANNEL_NOISE:   
+    db 0, 0, 0, 1, 0Eh, 0, 1, 24, 0, 0, 0
+    dw byte_126B
     align  30h,0
+
+ ; Music resuming feature always keeping state of previous music   
     db  "SAVEDYM1"    
     align  10h,0  
 SAVED_MUSIC_CHANNEL_YM1:
-    db 0      
-    db 0      
-    db 0      
-SAVED_MUSIC_CHANNEL_YM1_NOT_IN_USE:
     align  30h,0
     db  "BKPYM2"  
     align  30h,0
@@ -227,7 +129,7 @@ SAVED_MUSIC_CHANNEL_YM1_NOT_IN_USE:
     align  30h,0
     db  "BKPNOI"  
     align  30h,0
-
+; Temporary copy space for swapping of music/saved channels when resuming
     db  "TMPYM1"
     align  10h,0  
 TMPCPY_MUSIC_CHANNEL_YM1:

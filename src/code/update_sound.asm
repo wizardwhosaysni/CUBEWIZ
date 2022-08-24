@@ -12,7 +12,7 @@ UpdateSound:				; CODE XREF: Main_Loop+7p
 		ld	a, (MUSIC_YM6_FM_MODE)
 		or	a
 		jr	z, loc_42B	; if music uses	DAC samples, enable DAC
-		ld	a, (SFX_CHANNEL_YM6_NOT_IN_USE)
+		ld	a, (SFX_CHANNEL_YM6+CHANNEL_FREE)
 		or	a
 		jr	z, loc_42B	; else,	if (0x1503) = 0, then a	DAC sample is played as	an SFX,	so enable DAC
 		ld	bc, 2B00h	; else,	disable	DAC

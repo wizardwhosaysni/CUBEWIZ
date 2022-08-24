@@ -28,7 +28,7 @@ StopMusic:				; CODE XREF: Main+Dj Main+65p
 		ld	(CALL_YM2_INSTEAD_OF_YM1), a ; set to $01 when managing	YM4,5,6	channels, to call part 2 of YM
 		xor	a
 		ld	(iy+0),	a
-		ld	a, (SFX_CHANNEL_YM4_NOT_IN_USE)
+		ld	a, (SFX_CHANNEL_YM4+CHANNEL_FREE)
 		or	a
 		jr	z, loc_3B5
 		xor	a
@@ -39,7 +39,7 @@ StopMusic:				; CODE XREF: Main+Dj Main+65p
 
 loc_3B5:				; CODE XREF: StopMusic+48j
 		inc	(iy+0)
-		ld	a, (SFX_CHANNEL_YM5_NOT_IN_USE)
+		ld	a, (SFX_CHANNEL_YM5+CHANNEL_FREE)
 		or	a
 		jr	z, loc_3CC
 		xor	a
@@ -50,7 +50,7 @@ loc_3B5:				; CODE XREF: StopMusic+48j
 
 loc_3CC:				; CODE XREF: StopMusic+5Fj
 		inc	(iy+0)
-		ld	a, (SFX_CHANNEL_YM6_NOT_IN_USE)
+		ld	a, (SFX_CHANNEL_YM6+CHANNEL_FREE)
 		or	a
 		jr	z, loc_3E3
 		xor	a
