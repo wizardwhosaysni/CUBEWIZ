@@ -16,7 +16,7 @@ loc_1A0:				; CODE XREF: LoadDacSound+2j
 		add	hl, hl
 		add	hl, hl
 		add	hl, hl		; hl = 8 * a, so each DAC sound	entry uses 8 bytes
-		ld	bc, t_SAMPLE_LOAD_DATA
+		ld	bc, PCM_SAMPLE_ENTRIES
 		add	hl, bc		; hl now points	to the right entry
 		ld	a, (hl)		; get byte 0 : time period used
 		inc	hl		; ignore byte 1	!

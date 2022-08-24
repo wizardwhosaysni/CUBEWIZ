@@ -1,18 +1,21 @@
-t_SAMPLE_LOAD_DATA:
-		db	 1,   0,   DAC_BANK_1,	0,0EFh,	11h,   0, 80h ;	DATA XREF: LoadDacSound+12o
-		db    1,   0,	DAC_BANK_1,   0,0EFh, 11h,0EFh, 91h ; Data layout of the	8-byte entries :
-		db    1,   0,	DAC_BANK_1,   0,0E3h,   8, 31h,0F4h ; byte 0 : PCM frame	period parameter
-		db    1,   0,	DAC_BANK_2,   0,0E3h,   8,   0, 80h ; byte 1 : always 0 (ignored	when data is parsed)
-		db    1,   0,	DAC_BANK_2,   0,0E3h,   8,0E3h, 88h ; byte 2 : bank to load
-		db    1,   0,	DAC_BANK_1,   0,0EFh, 11h,0DEh,0A3h ; byte 3 : always 0 (ignored	when data is parsed)
-		db    1,   0,	DAC_BANK_1,   0,0C1h, 11h,0CDh,0B5h ; bytes 5-4 : sample	length
-		db    5,   0,	DAC_BANK_1,   0,0C1h, 11h,0CDh,0B5h ; bytes 7-6 : pointer to sound PCM Data once	bank is	loaded
-		db    3,   0,	DAC_BANK_1,   0,	  0, 0Fh, 8Eh,0C7h ;
-		db    9,   0,	DAC_BANK_1,   0,	  0, 0Fh, 8Eh,0C7h ; With this table, the same sound sample can	be played at different rates,
-		db    1,   0,	DAC_BANK_2,   0,	29h, 1Dh,0C6h, 91h ; resulting with quick high-pitched,	or slow	low-pitched sounds,
-		db  0Fh,   0,	DAC_BANK_2,   0,	29h, 1Dh,0C6h, 91h ; which is quite appropriate	for drums or attack hits or explosions !
-		db    1,   0,	DAC_BANK_1,   0,0A3h, 1Dh, 8Eh,0D6h
-		db    5,   0,	DAC_BANK_1,   0,0A3h, 1Dh, 8Eh,0D6h
-		db    9,   0,	DAC_BANK_1,   0,0A3h, 1Dh, 8Eh,0D6h
-		db  0Fh,   0,	DAC_BANK_1,   0,0A3h, 1Dh, 8Eh,0D6h
-		db  14h,   0,	DAC_BANK_1,   0,0A3h, 1Dh, 8Eh,0D6h
+
+; Playback period (higher=slower), bank index, length, offset
+
+PCM_SAMPLE_ENTRIES:
+    dw  1, DAC_BANK_1, 011EFh, 08000h
+    dw  1, DAC_BANK_1, 011EFh, 091EFh
+    dw  1, DAC_BANK_1,  08E3h, 0F431h
+    dw  1, DAC_BANK_2,  08E3h, 08000h
+    dw  1, DAC_BANK_2,  08E3h, 088E3h
+    dw  1, DAC_BANK_1, 011EFh, 0A3DEh
+    dw  1, DAC_BANK_1, 011C1h, 0B5CDh
+    dw  5, DAC_BANK_1, 011C1h, 0B5CDh
+    dw  3, DAC_BANK_1,  0F00h, 0C78Eh
+    dw  9, DAC_BANK_1,  0F00h, 0C78Eh
+    dw  1, DAC_BANK_2, 01D29h, 091C6h
+    dw 15, DAC_BANK_2, 01D29h, 091C6h
+    dw  1, DAC_BANK_1, 01DA3h, 0D68Eh
+    dw  5, DAC_BANK_1, 01DA3h, 0D68Eh
+    dw  9, DAC_BANK_1, 01DA3h, 0D68Eh
+    dw 15, DAC_BANK_1, 01DA3h, 0D68Eh
+    dw 20, DAC_BANK_1, 01DA3h, 0D68Eh

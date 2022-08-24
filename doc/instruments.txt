@@ -17,7 +17,7 @@ DAC Samples :
 Format is 8-bit PCM.
 PCM Sample entries are defined in a table in Z80 RAM.
 Data layout of the 8-byte entries :
-  word 0-1 : PCM frame period parameter : higher value slows down playback
+  word 0-1 : PCM frame period parameter (higher value slows down playback)
   word 2-3 : PCM bank
   word 5-4 : Sample length
   word 7-6 : Sample offset
