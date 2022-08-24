@@ -82,7 +82,7 @@ loc_A39:				; CODE XREF: YM1_LoadInstrument+4Ej
 		add	hl, de
 		ld	c, (hl)		; put corresponding value in c
 		ld	e, (ix+5)	; get Algo
-		ld	hl, t_SLOTS_PER_ALGO
+		ld	hl, YM_ALGORITHM_SLOTS
 		add	hl, de
 		ld	d, (hl)		; put corresponding value in d
 		ld	a, (TEMP_REGISTER) ; temp place	to keep	a register value when an YM instrument is loaded

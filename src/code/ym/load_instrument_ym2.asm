@@ -87,7 +87,7 @@ loc_AF2:				; CODE XREF: YM2_LoadInstrument+59j
 		add	hl, de
 		ld	c, (hl)
 		ld	e, (ix+5)
-		ld	hl, t_SLOTS_PER_ALGO
+		ld	hl, YM_ALGORITHM_SLOTS
 		add	hl, de
 		ld	d, (hl)
 		ld	a, (TEMP_REGISTER) ; temp place	to keep	a register value when an YM instrument is loaded
