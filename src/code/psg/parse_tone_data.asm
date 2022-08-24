@@ -156,7 +156,7 @@ Set_New_Note:				; CODE XREF: PSG_ParseToneData+A9j
 		sub	15h
 		ld	l, a
 		ld	h, 0
-		ld	bc, t_PSG_FREQUENCIES ;	PSG Frequency table, same idea as YM Frequency table but for PSG Tone Channels
+		ld	bc, PSG_FREQUENCIES ;	PSG Frequency table, same idea as YM Frequency table but for PSG Tone Channels
 		add	hl, hl
 		add	hl, bc
 		ld	a, (hl)
