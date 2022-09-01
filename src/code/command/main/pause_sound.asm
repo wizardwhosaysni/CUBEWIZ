@@ -49,11 +49,11 @@ loc_85:					; CODE XREF: Pause_Sound+36j
 		ld	(hl), a		; set PSG noise	channel	volume to 0
 
 loc_A4:					; CODE XREF: Pause_Sound+4Bj
-		ld	a, (NEW_OPERATION) ; new operation to process (play music/sfx, fade out	...), sent from	68k
+		ld	a, (NEW_COMMAND) ; new operation to process (play music/sfx, fade out	...), sent from	68k
 		or	a
 		jr	z, loc_A4	; loop as long as there	is no new operation to process
 		cp	0FFh
 		jr	nz, Update_YM_Instruments ; if next sent operation is not to mute the sound, go	process	it in the main loop
 		xor	a		; if next sent operation is to mute the	sound, then ignore it, and also	go back	to main	loop !
-		ld	(NEW_OPERATION), a ; new operation to process (play music/sfx, fade out	...), sent from	68k
+		ld	(NEW_COMMAND), a ; new operation to process (play music/sfx, fade out	...), sent from	68k
 ; End of function Pause_Sound

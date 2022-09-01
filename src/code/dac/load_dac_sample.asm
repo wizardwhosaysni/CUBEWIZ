@@ -1,7 +1,7 @@
 ; =============== S U B	R O U T	I N E =======================================
 
 
-LoadDacSound:				; CODE XREF: Main_Loop+1Cp
+LoadDacSample:				; CODE XREF: Main_Loop+1Cp
 		cp	0FEh ; '�'
 		jr	nz, loc_1A0	; if a != FE
 		ld	hl, 0C000h	; if a = FE, play nothing
@@ -21,7 +21,7 @@ loc_1A0:				; CODE XREF: LoadDacSound+2j
 		ld	a, (hl)		; get byte 0 : time period used
 		inc	hl		; ignore byte 1	!
 		inc	hl		; point	to byte	2 : bank to load
-		ld	(Dac_Loop+1), a	; change loop number to	change DAC play	time period
+		ld	(DacLoop+1), a	; change loop number to	change DAC play	time period
 		ld	a, (hl)		; get byte 2
 		ld	(DAC_BANK), a ; save byte 2
 		inc	hl		; ignore byte 3	!
@@ -35,7 +35,7 @@ loc_1A0:				; CODE XREF: LoadDacSound+2j
 		ld	h, (hl)		; 8th byte
 		ld	l, a		; hl = bytes 7-6 : sound data pointer
 		xor	a
-		ld	(NEW_SAMPLE_TO_LOAD), a	; clear	to say that DAC	sound is now loaded
+		ld	(NEW_SAMPLE), a	; clear	to say that DAC	sound is now loaded
 		ld	a, (DAC_BANK)
 		call	LoadBank	; loads	bank 0x1E0000 or 0x1E8000
 		ret

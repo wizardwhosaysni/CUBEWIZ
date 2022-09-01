@@ -72,7 +72,7 @@ Resume_Music:
     ld  (YM_TIMER_VALUE), a
     call  YM_SetTimer
     ld  a, 010h
-    ld  (FADE_IN_PARAMETERS), a
+    ld  (FADE_IN_PARAMS), a
     and  0Fh
     ld  (MUSIC_LEVEL), a ; general output level  for music and SFX type 1, sent from 68k
     xor  a
@@ -96,7 +96,7 @@ Resume_Music:
     
     ; avoid resumed PCM sample while fading in
     ld  a, 0FEh  ; '�'
-    ld  (NEW_SAMPLE_TO_LOAD), a
+    ld  (NEW_SAMPLE), a
     call  DAC_SetNewSample ; play  nothing  !
     xor  a
     ld  (DAC_REMAINING_LENGTH), a

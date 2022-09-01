@@ -1,4 +1,4 @@
-; =============== S U B	R O U T	I N E =======================================
+
 
 
 SendDacByte:		
@@ -6,7 +6,7 @@ SendDacByte:
 		push	bc
 		push	de
 		push	hl			
-		ld	b, 2Ah ; '*'    ; YM Register : DAC data
+		ld	b, YMREG_DAC_OUTPUT
 		ld	a, (DAC_REMAINING_LENGTH)
 		ld	d, a		
 		ld	a, (DAC_REMAINING_LENGTH+1)
@@ -57,4 +57,3 @@ SendDacByte_ret:
 		pop	bc
 		pop	af
 		ret
-; End of function Copy_Byte

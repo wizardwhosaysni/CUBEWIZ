@@ -1,10 +1,8 @@
-; =============== S U B	R O U T	I N E =======================================
 
-
-Main:					
+ProcessNewCommand:					
 		push	af		; main handles any new operation sent by 68K (or Z80 itself)
 		xor	a
-		ld	(NEW_OPERATION), a ; clear 0x1FFF (its value is	already	in pushed a)
+		ld	(NEW_COMMAND), a ; clear 0x1FFF (its value is	already	in pushed a)
 		ld	a, (COMMANDS_COUNTER)
 		add	a, 1
 		ld	(COMMANDS_COUNTER), a		
@@ -102,7 +100,7 @@ Load_Music:				; CODE XREF: Main+37j
 		ld	a, (hl)		; get byte 0
 		or	a		; check	if a = 0 with z	flag
 		jp	nz, Load_SFX	; if byte 0 of music data != 0,	actually load it as an SFX instead
-		ld	a, (FADE_IN_PARAMETERS)	; fade in parameter applied from 68k when a music is loaded. nibble 1 :	fade in	speed. nibble 2	: fade in start	level.
+		ld	a, (FADE_IN_PARAMS)	; fade in parameter applied from 68k when a music is loaded. nibble 1 :	fade in	speed. nibble 2	: fade in start	level.
 		and	0Fh
 		ld	(MUSIC_LEVEL), a ; general output level	for music and SFX type 1, sent from 68k
 		xor	a
@@ -183,7 +181,7 @@ Activate_Stereo_Outputs:		; CODE XREF: Main+E1j
 		ld	(MUSIC_CHANNEL_YM5+STEREO_PANNING), a
 		ld	(MUSIC_CHANNEL_YM6+STEREO_PANNING), a
 		ld	a, 0FEh	; '�'   ; put value FE as DAC Sound sample to load ... which loads nothing. Why such a thing then ?
-		ld	(NEW_SAMPLE_TO_LOAD), a	; stores the index of a	new DAC	sample to play
+		ld	(NEW_SAMPLE), a	; stores the index of a	new DAC	sample to play
 		call	YM_LoadTimerB
 
 Load_End:				; CODE XREF: Main+12Aj	Main+134j

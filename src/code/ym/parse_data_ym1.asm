@@ -80,7 +80,7 @@ Parsing_Start:				; CODE XREF: YM1_ParseData+7Aj
 		ld	a, l
 		or	a
 		jr	z, loc_5D7	; if we	have FF	00 00, then mute channel because there is nothing else to do
-		ld	(NEW_OPERATION), a ; else, we have FF xx 00, so	put first byte in 0x1FFF to process operation xx
+		ld	(NEW_COMMAND), a ; else, we have FF xx 00, so	put first byte in 0x1FFF to process operation xx
 
 loc_5D7:				; CODE XREF: YM1_ParseData+6Bj
 		ld	a, 1		; THIS PART mutes the channel because it has nothing to	play

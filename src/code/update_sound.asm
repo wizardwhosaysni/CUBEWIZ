@@ -25,7 +25,7 @@ loc_42B:				; CODE XREF: UpdateSound+Aj
 		
 		ld	hl, FADE_IN_TIMER ; incremented	at each	YM Timer overflow. When	it corresponds to fade in parameter, increment YM instruments level until max level
 		inc	(hl)		; increment counter
-		ld	a, (FADE_IN_PARAMETERS)	; fade in parameter applied from 68k when a music is loaded. nibble 1 :	fade in	speed. nibble 2	: fade in start	level.
+		ld	a, (FADE_IN_PARAMS)	; fade in parameter applied from 68k when a music is loaded. nibble 1 :	fade in	speed. nibble 2	: fade in start	level.
 		rrca			; two circular right rotates
 		rrca
 		and	3Ch ; '<'       ; just keep nibble 1 * 4

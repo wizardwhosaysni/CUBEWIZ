@@ -7,7 +7,7 @@ Update_YM_Instruments:			; CODE XREF: Pause_Sound+4Fj
 		pop	de
 		pop	hl
 		pop	af
-		jp	Main_Loop	; go back to main loop
+		jp	MainLoop	; go back to main loop
 ; End of function Update_YM_Instruments
 
 

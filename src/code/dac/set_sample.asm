@@ -25,6 +25,6 @@ DAC_SetNewSample:			; CODE XREF: YM2_ParseChannel6Data+2Dp
 
 loc_562:				; CODE XREF: DAC_SetNewSample+5j
 		ld	a, b
-		ld	(NEW_SAMPLE_TO_LOAD), a	; stores the index of a	new DAC	sample to play
+		ld	(NEW_SAMPLE), a	; stores the index of a	new DAC	sample to play
 		ret
 ; End of function DAC_SetNewSample
