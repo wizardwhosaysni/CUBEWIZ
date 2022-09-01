@@ -182,7 +182,7 @@ loc_88E:				; CODE XREF: YM2_ParseData+64j
 		add	a, (ix+1Ch)	; index
 		ld	l, a
 		ld	h, 0
-		ld	bc, YM_FREQUENCIES ; these words are not pointers, they are the two frequency	bytes to send to YM for	a given	note
+		ld	bc, YM_FREQUENCIES+1 ; these words are not pointers, they are the two frequency	bytes to send to YM for	a given	note
 		add	hl, hl
 		add	hl, bc
 		ld	a, (hl)

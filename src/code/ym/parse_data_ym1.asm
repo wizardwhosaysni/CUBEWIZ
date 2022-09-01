@@ -183,7 +183,7 @@ loc_636:				; CODE XREF: YM1_ParseData+57j
 		add	a, (ix+1Ch)	; 1C affects note index	up or down. It's set by command F9
 		ld	l, a
 		ld	h, 0
-		ld	bc, YM_FREQUENCIES ; load table of YM	frequencies
+		ld	bc, YM_FREQUENCIES+1 ; load table of YM	frequencies
 		add	hl, hl
 		add	hl, bc		; now hl points	to the YM frequency value corresponding	to the note's frequency
 		ld	a, (hl)
