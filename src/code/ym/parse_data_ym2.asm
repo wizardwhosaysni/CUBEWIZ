@@ -18,7 +18,7 @@ YM2_ParseData:				; CODE XREF: UpdateSound+88p
 		ld	d, 0
 		ld	e, a
 		add	ix, de
-		ld	a, (CURRENTLY_MANAGING_SFX) 
+		ld	a, (PROCESSING_SFX) 
 		or	a
 		jr	z, loc_7AE
 		ld	de, 01E0h ; '�'  ; point to the right SFX channel data
@@ -83,7 +83,7 @@ loc_7E6:				; CODE XREF: YM2_ParseData+A8j
 		jr	nz, loc_838	; jump if FF xx	xx
 		ld	a, 1		; else,	end of data for	this channel
 		ld	(ix+3),	a
-		ld	a, (CURRENTLY_MANAGING_SFX) 
+		ld	a, (PROCESSING_SFX) 
 		or	a
 		jr	z, loc_834
 		ld	bc, 0FE20h	; if an	SFX was	being managed, go back to corresponding	music channel
@@ -395,7 +395,7 @@ loc_9D7:				; DATA XREF: YM2_ParseData+21w
 		ld	c, l
 		ld	(ix+0Eh), c
 		call	YM2_ConditionalInput
-		ld	a, (CURRENTLY_MANAGING_SFX) 
+		ld	a, (PROCESSING_SFX) 
 		or	a
 		ret	nz
 		ld	a, (FADE_OUT_TIMER) ; Starts with fade out length value, decrements at each YM Timer overflow. set to $63 while	loading	music

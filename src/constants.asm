@@ -41,8 +41,8 @@ YM_TIMER_VALUE                 equ 1FF2h
 MUSIC_YM6_FM_MODE              equ 1FF3h
 DAC_BANK                       equ 1FF4h
 DAC_REMAINING_LENGTH           equ 1FF5h ; 2 bytes
-CURRENTLY_MANAGING_SFX         equ 1FF7h
-CALL_YM2                       equ 1FF8h
+PROCESSING_SFX         equ 1FF7h
+CALL_YM_PART2                       equ 1FF8h
 CURRENTLY_MANAGING_SFX_TYPE_2  equ 1FF9h
 TEMP_REGISTER                  equ 1FFAh
 FADE_IN_TIMER                  equ 1FFBh

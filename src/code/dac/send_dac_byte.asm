@@ -40,7 +40,7 @@ SendDacByte_YmRequest:
 		ld	(DAC_REMAINING_LENGTH), a
 		ld	a, e
 		ld	(DAC_REMAINING_LENGTH+1), a	
-		ld	a, (CURRENTLY_MANAGING_SFX)
+		ld	a, (PROCESSING_SFX)
 		or	a
 		jp	nz, SendDacByte_ldSfxBk
 		ld	a, (MUSIC_BANK)

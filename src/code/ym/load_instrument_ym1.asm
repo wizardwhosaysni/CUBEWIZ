@@ -12,7 +12,7 @@ YM1_LoadInstrument:			; CODE XREF: YM_UpdateInstrumentsLevels+12p
 		call	LoadBank
 		pop	af
 		ld	(ix+4),	a	; a is the total level of the instrument
-		ld	a, (CURRENTLY_MANAGING_SFX) 
+		ld	a, (PROCESSING_SFX) 
 		or	a
 		jr	z, loc_nimp3
 		ld	a, (ix+4)
@@ -135,7 +135,7 @@ loc_A85:				; CODE XREF: YM1_LoadInstrument+9Aj
 		ld	c, (hl)
 		call	YM1_ConditionnalInput
 		pop	de
-		ld	a, (CURRENTLY_MANAGING_SFX)
+		ld	a, (PROCESSING_SFX)
 		or	a
 		jr	nz, smeuuh3		
 		ld	a, (MUSIC_BANK)

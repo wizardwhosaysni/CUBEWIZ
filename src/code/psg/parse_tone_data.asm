@@ -27,7 +27,7 @@ PSG_ParseToneData:			; CODE XREF: UpdateSound+9Bp
 		rrca			; channel value	now in right place to make a PSG command
 		and	60h ; '`'       ; make sure only the two interesting bits are used
 		ld	(CURRENT_PSG_CHANNEL), a ; save	channel	number stored in that way
-		ld	a, (CURRENTLY_MANAGING_SFX) 
+		ld	a, (PROCESSING_SFX) 
 		or	a
 		jr	z, loc_C50
 		ld	de, 01E0h ; '�'  ; point to the right SFX channel data

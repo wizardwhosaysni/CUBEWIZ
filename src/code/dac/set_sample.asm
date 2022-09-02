@@ -4,7 +4,7 @@
 DAC_SetNewSample:			; CODE XREF: YM2_ParseChannel6Data+2Dp
 					; YM2_ParseChannel6Data+B7p
 		ld	b, a
-		ld	a, (CURRENTLY_MANAGING_SFX) ; indicates if an SFX type 2	is being processed, because these ones use extra channel ram areas, to keep current music data for when	SFX is finished
+		ld	a, (PROCESSING_SFX) ; indicates if an SFX type 2	is being processed, because these ones use extra channel ram areas, to keep current music data for when	SFX is finished
 		or	a
 		jr	nz, loc_562	; if currently managing	SFX channel ram	data, just set new sample to load
 		exx

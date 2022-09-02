@@ -3,7 +3,7 @@
 
 PSG_ConditionnalInput:	
 		push	af		
-		ld	a, (CURRENTLY_MANAGING_SFX) 
+		ld	a, (PROCESSING_SFX) 
 		or	a
 		jr	nz, send_psg_data	
 		exx

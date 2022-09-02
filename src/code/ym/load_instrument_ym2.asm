@@ -16,7 +16,7 @@ YM2_LoadInstrument:			; CODE XREF: YM_UpdateInstrumentsLevels:loc_FAp
 		call	LoadBank
 		pop	af
 		ld	(ix+4),	a
-		ld	a, (CURRENTLY_MANAGING_SFX) 
+		ld	a, (PROCESSING_SFX) 
 		or	a
 		jr	z, loc_AB6
 		ld	a, (ix+4)
@@ -140,7 +140,7 @@ loc_B3E:				; CODE XREF: YM2_LoadInstrument+A5j
 		ld	c, (hl)
 		call	YM2_ConditionalInput
 		pop	de
-		ld	a, (CURRENTLY_MANAGING_SFX)
+		ld	a, (PROCESSING_SFX)
 		or	a
 		jr	nz, smeuuh1		
 		ld	a, (MUSIC_BANK)

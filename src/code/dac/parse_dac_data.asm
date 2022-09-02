@@ -4,7 +4,7 @@
 YM2_ParseChannel6Data:			; CODE XREF: UpdateSound+94p
 					; UpdateSound+C5p
 		ld	ix, MUSIC_CHANNEL_YM6
-		ld	a, (CURRENTLY_MANAGING_SFX) 
+		ld	a, (PROCESSING_SFX) 
 		or	a
 		jr	z, loc_B68
 		ld	de, 01E0h ; '�'  ; if we are currently managing an SFX using the 3 extra RAM areas, point to the right area
@@ -66,7 +66,7 @@ loc_B97:
 		ld	a, (MUSIC_YM6_FM_MODE)
 		or	a
 		jr	z, return_BDE	; if music uses	DAC samples, return
-		ld	a, (CURRENTLY_MANAGING_SFX) 
+		ld	a, (PROCESSING_SFX) 
 		or	a
 		jr	z, return_BDE	; if it's not managing an SFX, return
 		ld	bc, 0FE20h	; go back to YM	Channel	6 area

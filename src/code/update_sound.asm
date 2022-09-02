@@ -91,8 +91,8 @@ loc_475:				; CODE XREF: UpdateSound+3Dj
 		call	LoadYmTimerB	; reload timer B
 		ld	iy, CURRENT_CHANNEL ; indicates	the channel to process,	from a relative	point of view :	YM1, YM2, PSG or SFX channels
 		xor	a
-		ld	(CURRENTLY_MANAGING_SFX), a
-		ld	(CALL_YM2), a ; taking care of YM 1,2,3
+		ld	(PROCESSING_SFX), a
+		ld	(CALL_YM_PART2), a ; taking care of YM 1,2,3
 		ld	(iy+0),	a
 		call	YM1_ParseData
 		
@@ -112,7 +112,7 @@ loc_475:				; CODE XREF: UpdateSound+3Dj
 		call	SendDacByte
 		
 		ld	a, 1
-		ld	(CALL_YM2), a ; taking care of YM 4,5,6
+		ld	(CALL_YM_PART2), a ; taking care of YM 4,5,6
 		xor	a
 		ld	(iy+0),	a
 		call	YM2_ParseData
@@ -163,9 +163,9 @@ loc_475:				; CODE XREF: UpdateSound+3Dj
 		ld	a, SFX_BANK
 		call	LoadBank		
 		ld	a, 1
-		ld	(CURRENTLY_MANAGING_SFX), a
+		ld	(PROCESSING_SFX), a
 		xor	a
-		ld	(CALL_YM2), a ; taking care of YM 1,2,3
+		ld	(CALL_YM_PART2), a ; taking care of YM 1,2,3
 		ld	(iy+0),	a
 		call	YM1_ParseData
 		inc	(iy+0)
@@ -173,7 +173,7 @@ loc_475:				; CODE XREF: UpdateSound+3Dj
 		inc	(iy+0)
 		call	YM1_ParseData
 		ld	a, 1
-		ld	(CALL_YM2), a ; taking care of YM 4,5,6
+		ld	(CALL_YM_PART2), a ; taking care of YM 4,5,6
 		xor	a
 		ld	(iy+0),	a
 		call	YM2_ParseData
@@ -192,7 +192,7 @@ loc_475:				; CODE XREF: UpdateSound+3Dj
 		call	PSG_ParseNoiseData		
 		
 		ld	a, 0
-		ld	(CURRENTLY_MANAGING_SFX), a
+		ld	(PROCESSING_SFX), a
 
 loc_4DE:				; CODE XREF: UpdateSound+59j
 		ld	a, (DAC_BANK)

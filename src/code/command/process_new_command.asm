@@ -10,7 +10,7 @@ ProcessNewCommand:
 
     ld  (LAST_COMMAND), a 
     cp  0FFh
-    jp  z, PauseSound
+    jp  z, MuteSound
     cp  0FEh
     jp  z, StopMusic
     cp  0FDh
@@ -160,7 +160,7 @@ $$activateStereoOutputsLoop:
     push  bc
     ld  a, b
     dec  a
-    ld  (CALL_YM2), a ; set to $01 when managing YM4,5,6 channels, to call part 2 of YM
+    ld  (CALL_YM_PART2), a ; set to $01 when managing YM4,5,6 channels, to call part 2 of YM
     ld  bc, YMREG_PANNING<<8+0C0h  ; activate left and right sound outputs for each channel
     call  ApplyYmInput
     inc  b

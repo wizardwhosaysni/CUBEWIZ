@@ -16,7 +16,7 @@ YM1_ParseData:				; CODE XREF: UpdateSound+70p
 		ld	d, 0
 		ld	e, a
 		add	ix, de		; point	to appropriate channel ram data
-		ld	a, (CURRENTLY_MANAGING_SFX) 
+		ld	a, (PROCESSING_SFX) 
 		or	a
 		jr	z, loc_nimp
 		ld	de, 01E0h ; '�'  ; point to the right SFX channel data
@@ -85,7 +85,7 @@ Parsing_Start:				; CODE XREF: YM1_ParseData+7Aj
 loc_5D7:				; CODE XREF: YM1_ParseData+6Bj
 		ld	a, 1		; THIS PART mutes the channel because it has nothing to	play
 		ld	(ix+3),	a	; channel data byte 3 =	1
-		ld	a, (CURRENTLY_MANAGING_SFX) 
+		ld	a, (PROCESSING_SFX) 
 		or	a
 		jr	z, loc_nimp2
 		ld	bc, 0FE20h	; if an	SFX was	being managed, go back to corresponding	music channel

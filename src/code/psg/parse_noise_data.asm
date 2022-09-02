@@ -6,7 +6,7 @@ PSG_ParseNoiseData:			; CODE XREF: UpdateSound+ADp
 		ld	ix, MUSIC_CHANNEL_NOISE
 		ld	a, 60h ; '`'
 		ld	(CURRENT_PSG_CHANNEL), a ; current PSG channel to process, stored in the right bits ready to be	sent to	PSG
-		ld	a, (CURRENTLY_MANAGING_SFX) 
+		ld	a, (PROCESSING_SFX) 
 		or	a
 		jr	z, loc_E87
 		ld	de, 01E0h ; '�'  ; point to the right SFX channel data

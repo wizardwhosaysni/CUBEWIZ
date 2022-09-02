@@ -3,7 +3,7 @@
 
 YM1_ConditionnalInput:			; CODE XREF: YM2_ParseData+45p
 					; YM2_ParseData+154p
-		ld	a, (CURRENTLY_MANAGING_SFX) 
+		ld	a, (PROCESSING_SFX) 
 		or	a
 		jr	nz, ApplyYm1Input	; if currently managing	SFX channel data, then just send data to YM1
 		exx
@@ -25,7 +25,7 @@ YM1_ConditionnalInput:			; CODE XREF: YM2_ParseData+45p
 ApplyYmInput:				; CODE XREF: Pause_Sound:loc_6Bp
 					; Pause_Sound+12p Pause_Sound+16p
 					; Main+D5p Main+D9p Main+DDp
-		ld	a, (CALL_YM2) ; set to $01 when managing	YM4,5,6	channels, to call part 2 of YM
+		ld	a, (CALL_YM_PART2) ; set to $01 when managing	YM4,5,6	channels, to call part 2 of YM
 		or	a
 		jr	nz, YM2_ConditionalInput ; if CallYm2InsteadOfYm1 set
 		jp	YM1_ConditionnalInput
@@ -79,7 +79,7 @@ YM2_ConditionalInput:			; CODE XREF: YM_Input+4j
 					; YM2_LoadInstrument+9Dp
 					; YM2_LoadInstrument+ABp
 					; YM2_SetStereo+10j
-		ld	a, (CURRENTLY_MANAGING_SFX) 
+		ld	a, (PROCESSING_SFX) 
 		or	a
 		jr	nz, ApplyYm2Input	; if currently managing	SFX channel ram	data, just send	byte to	YM
 		exx
