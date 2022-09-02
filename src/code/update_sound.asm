@@ -19,7 +19,7 @@ UpdateSound:				; CODE XREF: Main_Loop+7p
 
 loc_42B:				; CODE XREF: UpdateSound+Aj
 					; UpdateSound+10j
-		call	YM1_Input	; enable/disable DAC
+		call	ApplyYm1Input	; enable/disable DAC
 		
 		; This part updates music level with possible fade in parameters
 		
@@ -88,11 +88,11 @@ loc_475:				; CODE XREF: UpdateSound+3Dj
 					
 		; Start of Music Update	
 					
-		call	YM_LoadTimerB	; reload timer B
+		call	LoadYmTimerB	; reload timer B
 		ld	iy, CURRENT_CHANNEL ; indicates	the channel to process,	from a relative	point of view :	YM1, YM2, PSG or SFX channels
 		xor	a
 		ld	(CURRENTLY_MANAGING_SFX), a
-		ld	(CALL_YM2_INSTEAD_OF_YM1), a ; taking care of YM 1,2,3
+		ld	(CALL_YM2), a ; taking care of YM 1,2,3
 		ld	(iy+0),	a
 		call	YM1_ParseData
 		
@@ -112,7 +112,7 @@ loc_475:				; CODE XREF: UpdateSound+3Dj
 		call	SendDacByte
 		
 		ld	a, 1
-		ld	(CALL_YM2_INSTEAD_OF_YM1), a ; taking care of YM 4,5,6
+		ld	(CALL_YM2), a ; taking care of YM 4,5,6
 		xor	a
 		ld	(iy+0),	a
 		call	YM2_ParseData
@@ -165,7 +165,7 @@ loc_475:				; CODE XREF: UpdateSound+3Dj
 		ld	a, 1
 		ld	(CURRENTLY_MANAGING_SFX), a
 		xor	a
-		ld	(CALL_YM2_INSTEAD_OF_YM1), a ; taking care of YM 1,2,3
+		ld	(CALL_YM2), a ; taking care of YM 1,2,3
 		ld	(iy+0),	a
 		call	YM1_ParseData
 		inc	(iy+0)
@@ -173,7 +173,7 @@ loc_475:				; CODE XREF: UpdateSound+3Dj
 		inc	(iy+0)
 		call	YM1_ParseData
 		ld	a, 1
-		ld	(CALL_YM2_INSTEAD_OF_YM1), a ; taking care of YM 4,5,6
+		ld	(CALL_YM2), a ; taking care of YM 4,5,6
 		xor	a
 		ld	(iy+0),	a
 		call	YM2_ParseData

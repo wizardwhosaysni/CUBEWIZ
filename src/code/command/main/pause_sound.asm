@@ -1,12 +1,12 @@
 ; =============== S U B	R O U T	I N E =======================================
 
 
-Pause_Sound:				; CODE XREF: Main+8j
+PauseSound:				; CODE XREF: Main+8j
 		push	hl		; mutes	sound at reception of operation	$FF
 		push	de
 		xor	a
 		ld	(CURRENTLY_MANAGING_SFX), a ; clear
-		ld	(CALL_YM2_INSTEAD_OF_YM1), a ; set to $01 when managing	YM4,5,6	channels, to call part 2 of YM
+		ld	(CALL_YM2), a ; set to $01 when managing	YM4,5,6	channels, to call part 2 of YM
 		ld	bc, 407Fh	; set Total Level to smallest amplitude
 		ld	d, 4		; 4 loops, one for each	operator of the	3 channels
 
@@ -14,26 +14,26 @@ loc_6B:					; CODE XREF: Pause_Sound+1Cj
 
 					; Conditional input to implement here !
 
-		call	YM_Input
+		call	ApplyYmInput
 		inc	b
-		call	YM_Input
+		call	ApplyYmInput
 		inc	b
-		call	YM_Input
+		call	ApplyYmInput
 		inc	b
 		inc	b
 		dec	d
 		jr	nz, loc_6B
 		ld	a, 1
-		ld	(CALL_YM2_INSTEAD_OF_YM1), a ; set to $01 when managing	YM4,5,6	channels, to call part 2 of YM
+		ld	(CALL_YM2), a ; set to $01 when managing	YM4,5,6	channels, to call part 2 of YM
 		ld	bc, 407Fh	; set Total Level to smallest amplitude
 		ld	d, 4		; 4 loops, one for each	operator of 3 channels
 
 loc_85:					; CODE XREF: Pause_Sound+36j
-		call	YM2_Input
+		call	ApplyYm2Input
 		inc	b
-		call	YM2_Input
+		call	ApplyYm2Input
 		inc	b
-		call	YM2_Input
+		call	ApplyYm2Input
 		inc	b
 		inc	b
 		dec	d

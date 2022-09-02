@@ -109,7 +109,7 @@ Set_Timer:				; CODE XREF: PSG_ParseToneData+6Bj
 		ld	a, (de)
 		ld	c, a
 		inc	de
-		call	YM1_Input
+		call	ApplyYm1Input
 		jp	loc_C62		; get pointed data
 ; ---------------------------------------------------------------------------
 

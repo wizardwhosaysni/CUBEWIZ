@@ -5,7 +5,7 @@ to store other data like YM instruments, so the pointer table can be somewhere f
 
 MUSIC DATA LAYOUT : 
 
-$00 : Always $00.
+$00 : Always $00. If different from 0, then load entry as SFX instead.
 $01 : Set to 1 if YM6 uses FM mode. Otherwise, YM6 uses DAC mode.
 $02 : Always $00.
 $03 : YM Timer B value. This defines the frequency of sound updates, i.e. music tempo but also SFX play speed.

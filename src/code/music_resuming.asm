@@ -18,7 +18,7 @@ ActivateResuming:
 
 ; =============== S U B  R O U T  I N E =======================================
 
-Save_Music:  
+SaveMusic:  
     push  ix
     push  iy
     push  bc      
@@ -29,7 +29,7 @@ Save_Music:
     ld  (SAVED_MUSIC_YM6_FM_MODE), a
     ld  ix, MUSIC_CHANNEL_YM1
     ld  iy, SAVED_MUSIC_CHANNEL_YM1
-    call Copy_Music_Data
+    call CopyMusicData
     pop  de
     pop  bc    
     pop  iy
@@ -39,7 +39,7 @@ Save_Music:
 
 ; =============== S U B  R O U T  I N E =======================================
 
-Resume_Music:    
+ResumeMusic:    
     
     push  ix
     push  iy  
@@ -56,7 +56,7 @@ Resume_Music:
     ld  (TMPCPY_MUSIC_DOESNT_USE_SAMPLES), a
     ld  ix, MUSIC_CHANNEL_YM1
     ld  iy, TMPCPY_MUSIC_CHANNEL_YM1
-    call Copy_Music_Data
+    call CopyMusicData
     
     call  StopMusic        
     
@@ -70,7 +70,7 @@ Resume_Music:
     ld  (MUSIC_YM6_FM_MODE), a
     ld  a, (SAVED_YM_TIMER_VALUE)
     ld  (YM_TIMER_VALUE), a
-    call  YM_SetTimer
+    call  SetYmTimer
     ld  a, 010h
     ld  (FADE_IN_PARAMS), a
     and  0Fh
@@ -79,7 +79,7 @@ Resume_Music:
     ld  (FADE_IN_TIMER), a ; reset fade  in timer  
     ld  ix, SAVED_MUSIC_CHANNEL_YM1
     ld  iy, MUSIC_CHANNEL_YM1
-    call Copy_Music_Data
+    call CopyMusicData
     
     
     ; Copy temporary space into saved space
@@ -92,7 +92,7 @@ Resume_Music:
     ld  (SAVED_MUSIC_YM6_FM_MODE), a
     ld  ix, TMPCPY_MUSIC_CHANNEL_YM1
     ld  iy, SAVED_MUSIC_CHANNEL_YM1
-    call Copy_Music_Data
+    call CopyMusicData
     
     ; avoid resumed PCM sample while fading in
     ld  a, 0FEh  ; '�'
@@ -113,35 +113,35 @@ Resume_Music:
 
 ; =============== S U B  R O U T  I N E =======================================
 
-Copy_Music_Data:        
+CopyMusicData:        
     ld  b, 0h
     ld  c, 010h
     ld  d, 0Ah    
-Copy_Music_Data_Loop:      
-    call  Copy_Channel_Data  
+$$loop:      
+    call  CopyChannelData  
     add  ix, bc
     add  iy, bc
     dec  d
-    jr  nz, Copy_Music_Data_Loop
+    jr  nz, $$loop
     ret
 ; End of function Copy_Channel_Data
 
 ; =============== S U B  R O U T  I N E =======================================
 
-Copy_Channel_Data:        
+CopyChannelData:        
     push  de  
     ld  d, 020h
-Copy_Channel_Data_Loop:
-    call  Copy_Byte  
+$$loop:
+    call  CopyByte  
     dec  d
-    jr  nz, Copy_Channel_Data_Loop
+    jr  nz, $$loop
     pop  de
     ret
 ; End of function Copy_Channel_Data
 
 ; =============== S U B  R O U T  I N E =======================================
 
-Copy_Byte:        
+CopyByte:        
     ld  a, (ix)
     ld  (iy), a
     inc  ix

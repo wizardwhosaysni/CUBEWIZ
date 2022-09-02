@@ -23,7 +23,7 @@ YM_UpdateInstrumentsLevels:		; CODE XREF: Update_YM_Instrumentsp
 					
 		ld	iy, CURRENT_CHANNEL ; indicates	the channel to process,	from a relative	point of view :	YM1, YM2, PSG or SFX channels
 		xor	a
-		ld	(CALL_YM2_INSTEAD_OF_YM1), a ; set to $01 when managing	YM4,5,6	channels, to call part 2 of YM
+		ld	(CALL_YM2), a ; set to $01 when managing	YM4,5,6	channels, to call part 2 of YM
 		ld	(iy+0),	a
 		ld	ix, MUSIC_CHANNEL_YM1 ;	get channel data area
 		ld	a, (ix+4)	; get channel level
@@ -39,7 +39,7 @@ YM_UpdateInstrumentsLevels:		; CODE XREF: Update_YM_Instrumentsp
 		xor	a
 		ld	(iy+0),	a
 		ld	a, 1
-		ld	(CALL_YM2_INSTEAD_OF_YM1), a ; set to $01 when managing	YM4,5,6	channels, to call part 2 of YM
+		ld	(CALL_YM2), a ; set to $01 when managing	YM4,5,6	channels, to call part 2 of YM
 		ld	ix, MUSIC_CHANNEL_YM4
 		ld	a, (ix+4)
 		call	YM2_LoadInstrument
@@ -58,7 +58,7 @@ YM_UpdateInstrumentsLevels:		; CODE XREF: Update_YM_Instrumentsp
 ; =============== S U B	R O U T	I N E =======================================
 
 
-Update_YM_Level:			; CODE XREF: Main+17j
+UpdateYmLevel:			; CODE XREF: Main+17j
 		push	hl
 		push	de
 		ld	hl, MUSIC_LEVEL	; general output level for music and SFX type 1, sent from 68k

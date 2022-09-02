@@ -24,7 +24,7 @@ SAVED_MUSIC_BANK               equ 1FE0h
 PREVIOUS_MUSIC                 equ 1FE1h
 SAVED_YM_TIMER_VALUE           equ 1FE2h
 SAVED_MUSIC_YM6_FM_MODE        equ 1FE3h
-NEW_SAMPLE             equ 1FE4h
+NEW_SAMPLE                     equ 1FE4h
 DAC_LAST_OFFSET                equ 1FE5h
 TEMP_FREQUENCY                 equ 1FE6h ; 2 bytes
 RESUMING_DEACTIVATED           equ 1FE8h
@@ -42,14 +42,14 @@ MUSIC_YM6_FM_MODE              equ 1FF3h
 DAC_BANK                       equ 1FF4h
 DAC_REMAINING_LENGTH           equ 1FF5h ; 2 bytes
 CURRENTLY_MANAGING_SFX         equ 1FF7h
-CALL_YM2_INSTEAD_OF_YM1        equ 1FF8h
+CALL_YM2                       equ 1FF8h
 CURRENTLY_MANAGING_SFX_TYPE_2  equ 1FF9h
 TEMP_REGISTER                  equ 1FFAh
 FADE_IN_TIMER                  equ 1FFBh
-FADE_IN_PARAMS                 equ 1FFCh
+FADE_IN_PARAMS                 equ 1FFCh ; nibble 1 : fade in  speed. nibble 2 : fade in start level.
 MUSIC_LEVEL                    equ 1FFDh
 LAST_COMMAND                   equ 1FFEh
-NEW_COMMAND                  equ 1FFFh
+NEW_COMMAND                    equ 1FFFh
           
 ; Registers
 YM1_REGISTER                   equ 4000h
@@ -60,7 +60,9 @@ BANK_REGISTER                  equ 6000h
 PSG_PORT                       equ 7F11h
 
 ; YM registers
+YMREG_KEY_ON_OFF               equ 28h
 YMREG_DAC_OUTPUT               equ 2Ah
+YMREG_PANNING                  equ 0B4h
 
 ; Channel data offsets
 DATA_CURSOR                    equ 00h     ; $00-$01 Data cursor

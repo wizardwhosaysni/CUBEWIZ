@@ -6,7 +6,7 @@ StopMusic:				; CODE XREF: Main+Dj Main+65p
 		push	hl		; the subroutine sets key off /	mutes channels playing music
 		ld	iy, CURRENT_CHANNEL ; indicates	the channel to process,	from a relative	point of view :	YM1, YM2, PSG or SFX channels
 		xor	a
-		ld	(CALL_YM2_INSTEAD_OF_YM1), a ; set to $01 when managing	YM4,5,6	channels, to call part 2 of YM
+		ld	(CALL_YM2), a ; set to $01 when managing	YM4,5,6	channels, to call part 2 of YM
 		ld	(iy+0),	a
 		ld	ix, MUSIC_CHANNEL_YM1
 		call	YM1_LoadInstrument
@@ -25,7 +25,7 @@ StopMusic:				; CODE XREF: Main+Dj Main+65p
 		ld	bc, 2802h	; YM register :	Key on/off
 		call	YM1_ConditionnalInput	; set Key OFF
 		ld	a, 1
-		ld	(CALL_YM2_INSTEAD_OF_YM1), a ; set to $01 when managing	YM4,5,6	channels, to call part 2 of YM
+		ld	(CALL_YM2), a ; set to $01 when managing	YM4,5,6	channels, to call part 2 of YM
 		xor	a
 		ld	(iy+0),	a
 		ld	a, (SFX_CHANNEL_YM4+CHANNEL_FREE)

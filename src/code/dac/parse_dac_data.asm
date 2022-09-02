@@ -77,7 +77,7 @@ loc_B97:
 
 loc_BCC:
 		ld	c, (ix+1Eh)
-		call	YM2_Input	; set stereo
+		call	ApplyYm2Input	; set stereo
 		ld	a, (ix+3)
 		or	a
 		jr	nz, return_BDE	; return if channel has	nothing	to do

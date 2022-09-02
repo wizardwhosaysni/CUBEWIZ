@@ -94,7 +94,7 @@ loc_5D7:				; CODE XREF: YM1_ParseData+6Bj
 		add	a, (iy+0)
 		ld	b, a
 		ld	c, (ix+1Eh)	; load corresponding music channel stereo setting
-		call	YM1_Input
+		call	ApplyYm1Input
 		ld	a, (ix+3)
 		or	a
 		jr	nz, loc_nimp2

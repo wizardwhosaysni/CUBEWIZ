@@ -1,22 +1,19 @@
-; =============== S U B	R O U T	I N E =======================================
 
-
-InitChannelDataForSFX:			; CODE XREF: Main+120p	Main+14Cp
-		ld	(ix+0),	e
-		ld	(ix+1),	d	; bytes	0-1 = ed = offset of channel data source
-		ld	a, 0C0h	; '�'
-		ld	(ix+1Eh), a	; byte 1E = C0
-		xor	a		; clear	a
-		ld	(ix+2),	a	; clear	all those bytes
-		ld	(ix+3),	a
-		ld	(ix+6),	a
-		ld	(ix+8),	a
-		ld	(ix+13h), a
-		ld	(ix+14h), a
-		ld	(ix+1Ch), a
-		ld	(ix+1Dh), a
-		ld	(ix+1Fh), a
-		ld	a, 1
-		ld	(ix+1Eh), a	; byte 1E = 1 ... er ... why is	it set to $CO first and	then to	1 at the end ?
-		ret			; Definitely need to watch stereo stuff !
-; End of function InitChannelDataForSFX
+InitChannelDataForSFX:
+    ld  (ix+DATA_CURSOR),  e
+    ld  (ix+DATA_CURSOR+1),  d
+    ld  a, 0C0h
+    ld  (ix+STEREO_PANNING), a
+    xor  a
+    ld  (ix+TIME_COUNTER),  a
+    ld  (ix+CHANNEL_FREE),  a
+    ld  (ix+KEY_RELEASE),  a
+    ld  (ix+NO_RELEASE),  a
+    ld  (ix+INFINITE_LOOP_START_POINTER), a
+    ld  (ix+INFINITE_LOOP_START_POINTER+1), a
+    ld  (ix+NOTE_SHIFT), a
+    ld  (ix+FREQUENCY_SHIFT), a
+    ld  (ix+SLIDE_SPEED), a
+    ld  a, 1
+    ld  (ix+STEREO_PANNING), a  ; byte 1E = 1 ... er ... why is  it set to $CO first and  then to  1 at the end ?
+    ret

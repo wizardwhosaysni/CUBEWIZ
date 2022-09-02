@@ -1,7 +1,7 @@
 ; =============== S U B	R O U T	I N E =======================================
 
 
-Fade_Out:				; CODE XREF: Main+12j
+FadeOut:				; CODE XREF: Main+12j
 		ld	a, 12h		; set a	fade out period	length of $12 YM timer overflows
 		ld	(FADE_OUT_LENGTH), a ; number of YM Timer overflows to handle before incrementing the fade out counter
 		ld	a, 1
