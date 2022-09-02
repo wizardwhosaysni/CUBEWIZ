@@ -7,7 +7,7 @@
 
     include "code\init.asm"
     include "code\main_loop.asm"
-    include "code\command\main\pause_sound.asm"
+    include "code\command\main\mute_sound.asm"
     include "code\ym\update_level.asm"
     include "code\load_bank.asm"
     include "code\dac\load_dac_sample.asm"
