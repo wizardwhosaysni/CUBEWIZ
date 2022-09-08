@@ -1,67 +1,48 @@
-; =============== S U B  R O U T  I N E =======================================
+
+
 
 DeactivateResuming:        
     ld  a, 0FFh
     ld  (RESUMING_DEACTIVATED), a
     ret
-; End of function DeactivateResuming
-
-
-; =============== S U B  R O U T  I N E =======================================
 
 ActivateResuming:        
-    ld  a, 0h
+    ld  a, 0
     ld  (RESUMING_DEACTIVATED), a
     ret
-; End of function DeactivateResuming
 
-
-; =============== S U B  R O U T  I N E =======================================
-
-SaveMusic:  
-    push  ix
-    push  iy
-    push  bc      
-    push  de  
+SaveMusic:    
+    push  de     
+    push  hl  
     ld  a, (YM_TIMER_VALUE)
     ld  (SAVED_YM_TIMER_VALUE), a
     ld  a, (MUSIC_YM6_FM_MODE)
     ld  (SAVED_MUSIC_YM6_FM_MODE), a
-    ld  ix, MUSIC_CHANNEL_YM1
-    ld  iy, SAVED_MUSIC_CHANNEL_YM1
+    ld  hl, MUSIC_CHANNEL_YM1
+    ld  de, SAVED_MUSIC_CHANNEL_YM1
     call CopyMusicData
+    pop  hl
     pop  de
-    pop  bc    
-    pop  iy
-    pop  ix
     ret
-; End of function Save_Music
-
-; =============== S U B  R O U T  I N E =======================================
 
 ResumeMusic:    
-    
-    push  ix
-    push  iy  
-    push  bc    
-    push  de
+    push  de   
+    push  hl 
     
     ; save in temporary space
-
     ld  a, (MUSIC_BANK)
     ld  (TMPCPY_MUSIC_BANK), a
     ld  a, (YM_TIMER_VALUE)
     ld  (TMPCPY_YM_TIMER_VALUE), a
     ld  a, (MUSIC_YM6_FM_MODE)
     ld  (TMPCPY_MUSIC_DOESNT_USE_SAMPLES), a
-    ld  ix, MUSIC_CHANNEL_YM1
-    ld  iy, TMPCPY_MUSIC_CHANNEL_YM1
+    ld  hl, MUSIC_CHANNEL_YM1
+    ld  de, TMPCPY_MUSIC_CHANNEL_YM1
     call CopyMusicData
     
     call  StopMusic        
     
     ; resume
-    
     xor  a
     ld  a, (SAVED_MUSIC_BANK)
     ld  (MUSIC_BANK), a
@@ -77,74 +58,48 @@ ResumeMusic:
     ld  (MUSIC_LEVEL), a ; general output level  for music and SFX type 1, sent from 68k
     xor  a
     ld  (FADE_IN_TIMER), a ; reset fade  in timer  
-    ld  ix, SAVED_MUSIC_CHANNEL_YM1
-    ld  iy, MUSIC_CHANNEL_YM1
+    ld  hl, SAVED_MUSIC_CHANNEL_YM1
+    ld  de, MUSIC_CHANNEL_YM1
     call CopyMusicData
     
-    
     ; Copy temporary space into saved space
-
     ld  a, (TMPCPY_MUSIC_BANK)
     ld  (SAVED_MUSIC_BANK), a
     ld  a, (TMPCPY_YM_TIMER_VALUE)
     ld  (SAVED_YM_TIMER_VALUE), a
     ld  a, (TMPCPY_MUSIC_DOESNT_USE_SAMPLES)
     ld  (SAVED_MUSIC_YM6_FM_MODE), a
-    ld  ix, TMPCPY_MUSIC_CHANNEL_YM1
-    ld  iy, SAVED_MUSIC_CHANNEL_YM1
+    ld  hl, TMPCPY_MUSIC_CHANNEL_YM1
+    ld  de, SAVED_MUSIC_CHANNEL_YM1
     call CopyMusicData
     
     ; avoid resumed PCM sample while fading in
-    ld  a, 0FEh  ; '�'
+    ld  a, 0FEh
     ld  (NEW_SAMPLE), a
-    call  DAC_SetNewSample ; play  nothing  !
+    call  DAC_SetNewSample ; play nothing  !
     xor  a
     ld  (DAC_REMAINING_LENGTH), a
     ld  (DAC_REMAINING_LENGTH+1), a
     ld  (DAC_LAST_OFFSET), a
     ld  (DAC_LAST_OFFSET+1), a
         
+    pop  hl
     pop  de
-    pop  bc    
-    pop  iy
-    pop  ix
     ret
-; End of function Resume_Music
 
-; =============== S U B  R O U T  I N E =======================================
-
-CopyMusicData:        
-    ld  b, 0h
-    ld  c, 010h
-    ld  d, 0Ah    
+CopyMusicData:
+    push  bc  
+    ld  b, 0Ah     ; 10 channels
 $$loop:      
-    call  CopyChannelData  
-    add  ix, bc
-    add  iy, bc
-    dec  d
-    jr  nz, $$loop
+    push  bc
+    ld  bc, 020h   ; copy $20 bytes of data
+    ldir           ; copy BC bytes from source HL to target DE
+    ld  bc, 010h   ; skip $10 bytes (currently contain channel label)
+    add  hl, bc
+    ex  de, hl
+    add  hl, bc
+    ex  hl, de
+    pop  bc 
+    djnz  $$loop
+    pop  bc
     ret
-; End of function Copy_Channel_Data
-
-; =============== S U B  R O U T  I N E =======================================
-
-CopyChannelData:        
-    push  de  
-    ld  d, 020h
-$$loop:
-    call  CopyByte  
-    dec  d
-    jr  nz, $$loop
-    pop  de
-    ret
-; End of function Copy_Channel_Data
-
-; =============== S U B  R O U T  I N E =======================================
-
-CopyByte:        
-    ld  a, (ix)
-    ld  (iy), a
-    inc  ix
-    inc  iy
-    ret
-; End of function Copy_Byte
