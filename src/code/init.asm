@@ -4,7 +4,7 @@
     di                          ; disable interrupts : synchronization relies on YM Timer
     ld  sp, STACK_START
     ld  a, 0Fh
-    ld  (MUSIC_LEVEL), a
+    ld  (OUTPUT_LEVEL), a
     ld  a, 0FFh
     ld  (YM_TIMER_VALUE), a
     ld  a, 0Fh

@@ -9,21 +9,21 @@ StopMusic:
     ld  (CALL_YM_PART2), a
     ld  (iy+0),  a
     ld  ix, MUSIC_CHANNEL_YM1
-    call  YM1_LoadInstrument
+    call  LoadYm1Instrument
     ld  bc, (YMREG_KEY_ON_OFF<<8)+00h
-    call  YM1_ConditionnalInput
+    call  ApplyYm1ConditionalInput
     inc  (iy+0)
     xor  a
     ld  ix, MUSIC_CHANNEL_YM2
-    call  YM1_LoadInstrument
+    call  LoadYm1Instrument
     ld  bc, (YMREG_KEY_ON_OFF<<8)+01h
-    call  YM1_ConditionnalInput
+    call  ApplyYm1ConditionalInput
     inc  (iy+0)
     xor  a
     ld  ix, MUSIC_CHANNEL_YM3
-    call  YM1_LoadInstrument
+    call  LoadYm1Instrument
     ld  bc, (YMREG_KEY_ON_OFF<<8)+02h
-    call  YM1_ConditionnalInput
+    call  ApplyYm1ConditionalInput
     ld  a, 1
     ld  (CALL_YM_PART2), a
     xor  a
@@ -33,9 +33,9 @@ StopMusic:
     jr  z, $$skipYm4
     xor  a
     ld  ix, MUSIC_CHANNEL_YM4
-    call  YM2_LoadInstrument
+    call  LoadYm2Instrument
     ld  bc, (YMREG_KEY_ON_OFF<<8)+04h
-    call  YM1_ConditionnalInput
+    call  ApplyYm1ConditionalInput
 $$skipYm4:
     inc  (iy+0)
     ld  a, (SFX_CHANNEL_YM5+CHANNEL_FREE)
@@ -43,9 +43,9 @@ $$skipYm4:
     jr  z, $$skipYm5
     xor  a
     ld  ix, MUSIC_CHANNEL_YM5
-    call  YM2_LoadInstrument
+    call  LoadYm2Instrument
     ld  bc, (YMREG_KEY_ON_OFF<<8)+05h
-    call  YM1_ConditionnalInput
+    call  ApplyYm1ConditionalInput
 $$skipYm5:
     inc  (iy+0)
     ld  a, (SFX_CHANNEL_YM6+CHANNEL_FREE)
@@ -53,9 +53,9 @@ $$skipYm5:
     jr  z, $$skipYm6
     xor  a
     ld  ix, MUSIC_CHANNEL_YM6
-    call  YM2_LoadInstrument
+    call  LoadYm2Instrument
     ld  bc, (YMREG_KEY_ON_OFF<<8)+06h
-    call  YM1_ConditionnalInput
+    call  ApplyYm1ConditionalInput
     jr  $$skipYm6
 $$skipYm6:
     ld  hl, PSG_PORT

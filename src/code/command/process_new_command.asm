@@ -26,15 +26,16 @@ ProcessNewCommand:
     cp  0F1h
     jp  z, SetYmTimer
     cp  0F0h
-    jp  z, UpdateYmLevel
+    jp  z, ApplyOutputLevel
+
+    ; Music ids from 1 to 40h, SFX ids from 41h
     cp  41h
-    jp  nc, $$loadSfx  ; Music ids from 1 to 40h, SFX ids from 41h
-    
+    jp  nc, $$loadSfx  
     ld  ix, PREVIOUS_MUSIC
     cp  (ix)
-    jp  z, $$resumePreviousMusic
-    jp  $$loadNewMusic
-$$resumePreviousMusic:
+    jp  nz, $$loadNewMusic
+
+    ; resume music
     ; if saved music was finished, just load it again
     push  af
     ld  a, (SAVED_MUSIC_CHANNEL_YM1+CHANNEL_FREE)    
@@ -54,6 +55,7 @@ $$resume:
     pop  af
     ld  (CURRENT_MUSIC), a
     jp  ResumeMusic    
+
 $$loadNewMusic:    
     push  hl
     push  de
@@ -64,6 +66,7 @@ $$loadNewMusic:
     push  af
     cp  21h
     jr  nc, $$loadMusicFromBank2
+    ; id from 1 to $20
     ld  a, MUSIC_BANK_1
     ld  (MUSIC_BANK), a
     call  LoadBank
@@ -75,6 +78,7 @@ $$loadNewMusic:
     jp  $$loadMusicEntry
 
 $$loadMusicFromBank2:
+    ; id from $21 to $40
     ld  a, MUSIC_BANK_2  
     ld  (MUSIC_BANK), a
     call  LoadBank
@@ -100,7 +104,7 @@ $$loadMusicEntry:
     jp  nz, $$loadSfx  ; if byte 0 of music data != 0, load it as an SFX instead
     ld  a, (FADE_IN_PARAMS)
     and  0Fh
-    ld  (MUSIC_LEVEL), a
+    ld  (OUTPUT_LEVEL), a
     xor  a
     ld  (FADE_IN_TIMER), a
     
@@ -151,7 +155,7 @@ $$initMusicChannelsLoop:
     ld  a, 1
     ld  (ix+CHANNEL_FREE),  a
 $$skipMusicChannelInit:
-    ld  de, 30h ; channel data size
+    ld  de, CHANNEL_DATA_SIZE
     add  ix, de
     djnz  $$initMusicChannelsLoop
 
@@ -202,6 +206,7 @@ $$loadSfx:
     inc  hl
     ld  h, (hl)    ; get the proper pointer
     ld  l, a
+     ; TODO assemble SFX with configurable target ROM offset and remove this offset compensation code
      ; hl now points to original sfx offset, with sfx data starting at 0x162D
      ; now sfx data starts at 0xB070 so 0xB070 - 0x162D = 9A43h to add
      push  bc
@@ -225,6 +230,7 @@ $$initSfxType1ChannelsLoop:
     inc  hl
     ld  d, (hl)    ; de = bytes 2-3 of sound data = pointer
     inc  hl
+     ; TODO assemble SFX with configurable target ROM offset and remove this offset compensation code
      ; add 9A43h to sfx data offset since it's been moved from driver to bank
      push  hl    
      ld  hl, 09A43h
@@ -236,7 +242,7 @@ $$initSfxType1ChannelsLoop:
     jr  z, $$skipSfxType1ChannelInit
     call  InitChannelDataForSFX
 $$skipSfxType1ChannelInit:
-    ld  de, 30h ; channel data size
+    ld  de, CHANNEL_DATA_SIZE
     add  ix, de
     djnz  $$initSfxType1ChannelsLoop
     jr  $$returnToMainLoop  
@@ -250,6 +256,7 @@ $$initSfxType2ChannelsLoop:
     inc  hl
     ld  d, (hl)
     inc  hl
+     ; TODO assemble SFX with configurable target ROM offset and remove this offset compensation code
      ; add 9A43h to sfx data offset since it's been moved from driver to bank
      push  hl    
      ld  hl, 09A43h
@@ -268,7 +275,7 @@ $$initSfxType2ChannelsLoop:
     ld  c, 0C0h
     call  ApplyYm2Input
 $$skipSfxType2ChannelInit:
-    ld  de, 30h ; channel data size
+    ld  de, CHANNEL_DATA_SIZE
     add  ix, de
     pop  bc
     inc  c

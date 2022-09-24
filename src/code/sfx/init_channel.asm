@@ -3,7 +3,7 @@ InitChannelDataForSFX:
     ld  (ix+DATA_CURSOR),  e
     ld  (ix+DATA_CURSOR+1),  d
     ld  a, 0C0h
-    ld  (ix+STEREO_PANNING), a
+    ld  (ix+STEREO_PANNING), a ; overwritten later below, to remove ?
     xor  a
     ld  (ix+TIME_COUNTER),  a
     ld  (ix+CHANNEL_FREE),  a
@@ -15,5 +15,5 @@ InitChannelDataForSFX:
     ld  (ix+FREQUENCY_SHIFT), a
     ld  (ix+SLIDE_SPEED), a
     ld  a, 1
-    ld  (ix+STEREO_PANNING), a  ; byte 1E = 1 ... er ... why is  it set to $CO first and  then to  1 at the end ?
+    ld  (ix+STEREO_PANNING), a
     ret

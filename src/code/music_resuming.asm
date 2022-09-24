@@ -55,7 +55,7 @@ ResumeMusic:
     ld  a, 010h
     ld  (FADE_IN_PARAMS), a
     and  0Fh
-    ld  (MUSIC_LEVEL), a ; general output level  for music and SFX type 1, sent from 68k
+    ld  (OUTPUT_LEVEL), a 
     xor  a
     ld  (FADE_IN_TIMER), a ; reset fade  in timer  
     ld  hl, SAVED_MUSIC_CHANNEL_YM1
@@ -76,7 +76,7 @@ ResumeMusic:
     ; avoid resumed PCM sample while fading in
     ld  a, 0FEh
     ld  (NEW_SAMPLE), a
-    call  DAC_SetNewSample ; play nothing  !
+    call  SetNewDacSample ; play nothing  !
     xor  a
     ld  (DAC_REMAINING_LENGTH), a
     ld  (DAC_REMAINING_LENGTH+1), a

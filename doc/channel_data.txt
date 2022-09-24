@@ -11,7 +11,7 @@ $09     Vibrato delay time
 $0A     Time counter for vibrato
 $0B-$0C Vibrato data start pointer
 $0D     Vibrato data cursor
-$0E-$0F Current YM frequency
+$0E-$0F Current frequency
 $10     YM Instrument / PSG Instrument Pointer (bytes $10-$11)
 $11-$12 Target YM frequency for slide / PSG Instrument Cursor (byte $12)
 $13-$14 Infinite Loop start pointer
