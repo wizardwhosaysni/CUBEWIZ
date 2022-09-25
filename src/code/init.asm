@@ -10,7 +10,7 @@
     ld  a, 0Fh
     ld  (FADE_IN_PARAMS), a
     call  ActivateResuming
-    ld  a, 20h ; ' '            ; initialize music channels with void music entry $20
+    ld  a, 20h                  ; initialize music channels with void music entry $20
     call  ProcessNewCommand
     ld  a, (DAC_BANK)
     call  LoadBank
