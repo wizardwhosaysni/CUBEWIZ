@@ -206,14 +206,6 @@ $$loadSfx:
     inc  hl
     ld  h, (hl)    ; get the proper pointer
     ld  l, a
-     ; TODO assemble SFX with configurable target ROM offset and remove this offset compensation code
-     ; hl now points to original sfx offset, with sfx data starting at 0x162D
-     ; now sfx data starts at 0xB070 so 0xB070 - 0x162D = 9A43h to add
-     push  bc
-     ld  b, 9Ah
-     ld  c, 43h
-     add  hl, bc
-     pop  bc
     ld  a, h
     ld  (DAC_LAST_OFFSET), a
     ld  a, l  
@@ -230,13 +222,6 @@ $$initSfxType1ChannelsLoop:
     inc  hl
     ld  d, (hl)    ; de = bytes 2-3 of sound data = pointer
     inc  hl
-     ; TODO assemble SFX with configurable target ROM offset and remove this offset compensation code
-     ; add 9A43h to sfx data offset since it's been moved from driver to bank
-     push  hl    
-     ld  hl, 09A43h
-     adc  hl, de
-     ex  hl, de
-     pop  hl
     ld  a, (de)
     cp  0FFh
     jr  z, $$skipSfxType1ChannelInit
@@ -256,13 +241,6 @@ $$initSfxType2ChannelsLoop:
     inc  hl
     ld  d, (hl)
     inc  hl
-     ; TODO assemble SFX with configurable target ROM offset and remove this offset compensation code
-     ; add 9A43h to sfx data offset since it's been moved from driver to bank
-     push  hl    
-     ld  hl, 09A43h
-     adc  hl, de
-     ex  hl, de
-     pop  hl
     ld  a, (de)
     cp  0FFh
     jr  z, $$skipSfxType2ChannelInit
